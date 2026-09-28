@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MM HCM Team - Premium Fast VPN</title>
-    <!-- Firebase Compatibility Libraries -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     
@@ -152,7 +152,7 @@
         <p>High-Speed Premium Packages</p>
     </div>
 
-    <!-- Dynamic Packages Container -->
+    <!-- Firebase Dynamic Packages Content Container -->
     <div id="packages-container">
         <p style="text-align: center; color: #9ca3af;">Loading packages...</p>
     </div>
@@ -218,15 +218,14 @@
 <script>
     // ⚠️ မိမိ၏ Firebase Config အချက်အလက်များဖြင့် အစားထိုးပါ
     const firebaseConfig = {
-  apiKey: "AIzaSyDH2ylJwWUWprN6pKOEnn22rTcVC-_3JpY",
-  authDomain: "hcm-a0045.firebaseapp.com",
-  databaseURL: "https://hcm-a0045-default-rtdb.firebaseio.com",
-  projectId: "hcm-a0045",
-  storageBucket: "hcm-a0045.firebasestorage.app",
-  messagingSenderId: "859124742345",
-  appId: "1:859124742345:web:4472cce9b0e0e43cb17518",
-  measurementId: "G-EQJ3CHXQ4H"
-};
+        apiKey: "YOUR_FIREBASE_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+        projectId: "YOUR_PROJECT",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -235,16 +234,7 @@
     let currentPlanPrice = "";
     let telegramUsername = "akuma_edu";
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
+    // Realtime Database မှ Package များနှင့် Payment Data ယူခြင်း
     db.ref().on('value', (snapshot) => {
         const data = snapshot.val();
         if(!data) return;
@@ -266,6 +256,7 @@
         const container = document.getElementById('packages-container');
         container.innerHTML = '';
 
+        // Category အလိုက် စုစည်းခြင်း
         const categories = {};
         Object.keys(packages).forEach(key => {
             const pkg = packages[key];
@@ -284,24 +275,19 @@
             const grid = document.createElement('div');
             grid.className = 'package-grid';
 
-            categories[catName].forEach((pkg) => {
+            categories[catName].forEach((pkg, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                
-                const safeName = escapeHtml(pkg.name);
-                const safePrice = escapeHtml(pkg.price);
-                const safeBadge = escapeHtml(pkg.badge);
-
                 if(!firstPlanSelected) {
                     card.classList.add('selected');
-                    selectPackage(card, safeName, safePrice);
+                    selectPackage(card, pkg.name, pkg.price);
                     firstPlanSelected = true;
                 }
 
-                card.onclick = () => selectPackage(card, safeName, safePrice);
+                card.onclick = () => selectPackage(card, pkg.name, pkg.price);
                 
-                let badgeHtml = safeBadge ? `<span class="badge">${safeBadge}</span>` : '';
-                card.innerHTML = `${badgeHtml}<div class="card-title">${safeName}</div><div class="card-price">${safePrice}</div>`;
+                let badgeHtml = pkg.badge ? `<span class="badge">${pkg.badge}</span>` : '';
+                card.innerHTML = `${badgeHtml}<div class="card-title">${pkg.name}</div><div class="card-price">${pkg.price}</div>`;
                 grid.appendChild(card);
             });
 
