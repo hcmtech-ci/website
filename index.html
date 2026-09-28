@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HCM Team - Premium Fast VPN</title>
+    <title>MM HCM Team - Premium Fast VPN</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -16,61 +16,43 @@
             --border-color: #1f2937;
         }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: 'Pyidaungsu', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Pyidaungsu', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0;
-            padding: 20px;
+            padding: 20px 16px;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 480px;
             width: 100%;
         }
 
+        /* Header Section */
         .header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 22px;
             color: #60a5fa;
-            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
         .header p {
             color: var(--text-sub);
-            font-size: 14px;
-            margin: 0;
-        }
-
-        /* Category Tabs */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            background: #1f2937;
-            color: var(--text-sub);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
             font-size: 13px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .tab-btn.active {
-            background: var(--accent-blue);
-            color: #fff;
         }
 
         /* Package Grid */
@@ -78,31 +60,38 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-bottom: 20px;
         }
 
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 14px;
             position: relative;
             cursor: pointer;
             transition: all 0.2s ease;
+            user-select: none;
         }
 
-        .card:hover, .card.selected {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 12px rgba(37, 99, 235, 0.3);
+        .card:hover {
+            border-color: #3b82f6;
+        }
+
+        .card.selected {
+            border-color: #10b981;
+            background-color: #131f2e;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
         }
 
         .badge {
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
             text-transform: uppercase;
         }
 
@@ -115,62 +104,91 @@
             color: var(--text-sub);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-bottom: 2px;
         }
 
         .card-title {
-            font-size: 15px;
-            font-weight: bold;
-            margin: 4px 0 10px 0;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
         }
 
         .card-price {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 800;
             color: #fff;
         }
 
         .card-price span {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-sub);
             font-weight: normal;
         }
 
         .card-feature {
-            font-size: 12px;
+            font-size: 11px;
             color: #34d399;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
-        /* Order Box Footer */
+        /* Selected Footer Box */
         .order-footer {
-            margin-top: 24px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 16px;
-            border-radius: 12px;
+            border-radius: 14px;
             text-align: center;
         }
 
+        .selected-text {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .selected-plan {
+            font-size: 15px;
+            font-weight: bold;
+            color: #10b981;
+            margin-bottom: 12px;
+        }
+
         .btn-order {
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
-            background: #229ED9; /* Telegram Blue */
+            background: #229ED9;
             color: white;
             padding: 12px 0;
-            border-radius: 8px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
             font-size: 15px;
-            margin-top: 12px;
-            box-sizing: border-box;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
         }
 
+        .btn-order:hover {
+            background: #1d8ec3;
+        }
+
+        /* Guarantees Notice */
         .guarantee-box {
-            margin-top: 20px;
+            margin-top: 18px;
+            padding: 14px;
+            background: rgba(31, 41, 55, 0.4);
+            border-radius: 10px;
             font-size: 12px;
             color: var(--text-sub);
-            text-align: left;
             line-height: 1.6;
+        }
+
+        .guarantee-box b {
+            color: #f3f4f6;
         }
     </style>
 </head>
@@ -178,7 +196,7 @@
 
 <div class="container">
     <div class="header">
-        <h1>HCM TEAM VPN</h1>
+        <h1>MM HCM Team VPN</h1>
         <p>High-Speed & VIP Premium Packages</p>
     </div>
 
@@ -186,7 +204,7 @@
     <div class="package-grid">
 
         <!-- Card 1 -->
-        <div class="card" onclick="selectPackage('Max Unlimited', '7,000 Ks')">
+        <div class="card" onclick="selectPackage(this, 'Max Unlimited', '7,000 Ks')">
             <span class="badge badge-green">BEST VALUE</span>
             <div class="card-type">UNLIMITED</div>
             <div class="card-title">Max Unlimited</div>
@@ -195,57 +213,67 @@
         </div>
 
         <!-- Card 2 -->
-        <div class="card" onclick="selectPackage('Data Pack Pro (No Expire)', '12,000 Ks')">
+        <div class="card" onclick="selectPackage(this, 'Data Pack Pro (No Expire)', '12,000 Ks')">
             <span class="badge badge-blue">POPULAR</span>
             <div class="card-type">NO EXPIRE</div>
             <div class="card-title">Data Pack Pro</div>
             <div class="card-price">12K <span>/ 12,000 Ks</span></div>
-            <div class="card-feature">✓ 300 GB Data</div>
+            <div class="card-feature">✓ High Data Volume</div>
         </div>
 
         <!-- Card 3 -->
-        <div class="card" onclick="selectPackage('Data Pack Lite (No Expire)', '5,000 Ks')">
+        <div class="card selected" id="default-card" onclick="selectPackage(this, 'Data Pack Lite (No Expire)', '5,000 Ks')">
             <div class="card-type">NO EXPIRE</div>
             <div class="card-title">Data Pack Lite</div>
             <div class="card-price">5K <span>/ 5,000 Ks</span></div>
-            <div class="card-feature">✓ 100 GB Data</div>
+            <div class="card-feature">✓ Flexible Usage</div>
         </div>
 
         <!-- Card 4 -->
-        <div class="card" onclick="selectPackage('Monthly Pro (30 Days)', '14,000 Ks')">
+        <div class="card" onclick="selectPackage(this, 'Monthly Pro (30 Days)', '14,000 Ks')">
             <span class="badge badge-purple">MAX SPEED</span>
             <div class="card-type">30 DAYS</div>
             <div class="card-title">Monthly Pro</div>
             <div class="card-price">14K <span>/ 14,000 Ks</span></div>
-            <div class="card-feature">✓ 500 GB Data</div>
+            <div class="card-feature">✓ VIP Speed Turbo</div>
         </div>
 
         <!-- Card 5 -->
-        <div class="card" onclick="selectPackage('Monthly Std (30 Days)', '7,000 Ks')">
+        <div class="card" onclick="selectPackage(this, 'Monthly Std (30 Days)', '7,000 Ks')">
             <div class="card-type">30 DAYS</div>
             <div class="card-title">Monthly Std</div>
             <div class="card-price">7K <span>/ 7,000 Ks</span></div>
-            <div class="card-feature">✓ 300 GB Data</div>
+            <div class="card-feature">✓ Standard Speed</div>
         </div>
 
         <!-- Card 6 -->
-        <div class="card" onclick="selectPackage('Monthly Saver (30 Days)', '3,000 Ks')">
+        <div class="card" onclick="selectPackage(this, 'Monthly Saver (30 Days)', '3,000 Ks')">
             <div class="card-type">30 DAYS</div>
             <div class="card-title">Monthly Saver</div>
             <div class="card-price">3K <span>/ 3,000 Ks</span></div>
-            <div class="card-feature">✓ 100 GB Data</div>
+            <div class="card-feature">✓ Economy Speed</div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="card" onclick="selectPackage(this, 'Starter Pack (15 Days)', '1,500 Ks')">
+            <span class="badge badge-blue">STARTER</span>
+            <div class="card-type">15 DAYS</div>
+            <div class="card-title">Starter Pack</div>
+            <div class="card-price">1.5K <span>/ 1,500 Ks</span></div>
+            <div class="card-feature">✓ Trial Speed</div>
         </div>
 
     </div>
 
-    <!-- Order Selected Section -->
+    <!-- Selected Info & Direct Order Button -->
     <div class="order-footer">
-        <div id="selected-info" style="font-size: 14px; font-weight: bold;">
-            Package တစ်ခုခု ရွေးချယ်ပါ
-        </div>
-        <a id="telegram-btn" href="https://t.me/akuma_edu" target="_blank" class="btn-order">
-            Telegram မှတစ်ဆင့် ဝယ်ယူမည်
-        </a>
+        <div class="selected-text">SELECTED PACKAGE</div>
+        <div id="selected-plan" class="selected-plan">No Expire (Data Pack Lite) • 5,000 Ks</div>
+        
+        <button onclick="openTelegram()" class="btn-order">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+            Telegram Software ထဲ တိုက်ရိုက်သွားမည်
+        </button>
     </div>
 
     <div class="guarantee-box">
@@ -257,16 +285,44 @@
 </div>
 
 <script>
-    function selectPackage(name, price) {
-        // Text ပြောင်းရန်
-        document.getElementById('selected-info').innerText = "SELECTED: " + name + " (" + price + ")";
+    // Selected states
+    let currentPlanName = "Data Pack Lite (No Expire)";
+    let currentPlanPrice = "5,000 Ks";
+    const telegramUsername = "akuma_edu";
+
+    function selectPackage(element, name, price) {
+        // Remove 'selected' class from all cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => card.classList.remove('selected'));
         
-        // Auto Telegram Link ပြင်ရန်
-        const telegramUsername = "akuma_edu";
-        const message = `Hello, HCM Team မှ VPN ဝယ်ယူချင်လို့ပါခင်ဗျာ။\n\n- Selected Package: ${name}\n- Price: ${price}`;
+        // Add 'selected' class to clicked card
+        element.classList.add('selected');
+
+        currentPlanName = name;
+        currentPlanPrice = price;
+
+        // Update Text
+        document.getElementById('selected-plan').innerText = `${name} • ${price}`;
+    }
+
+    function openTelegram() {
+        const message = `Hello, MM HCM Team မှ VPN ဝယ်ယူချင်လို့ပါခင်ဗျာ။\n\n- Selected Package: ${currentPlanName}\n- Price: ${currentPlanPrice}`;
         const encodedMessage = encodeURIComponent(message);
         
-        document.getElementById('telegram-btn').href = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
+        // 1. Direct App Protocol (Opens Telegram App/Desktop Software directly)
+        const appUrl = `tg://resolve?domain=${telegramUsername}&text=${encodedMessage}`;
+        
+        // 2. Web Fallback (If app is not installed)
+        const webUrl = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
+
+        // Attempt to open native software directly
+        window.location.href = appUrl;
+
+        // Fallback to web link if native protocol doesn't trigger within 1.5 seconds
+        setTimeout(() => {
+            if (document.hidden || document.webkitHidden) return;
+            window.location.href = webUrl;
+        }, 1500);
     }
 </script>
 
