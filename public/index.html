@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MM HCM Team - Premium Fast VPN</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #090d16 50%, #1e1b4b 100%);
@@ -15,14 +11,20 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --glass-hover-bg: rgba(255, 255, 255, 0.07);
             --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
             --text-main: #f9fafb;
             --text-sub: #9ca3af;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            font-family: 'Pyidaungsu', -apple-system, sans-serif;
+            font-family: 'Pyidaungsu', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
@@ -32,116 +34,390 @@
             min-height: 100vh;
         }
 
-        .container { max-width: 480px; width: 100%; }
+        .container {
+            max-width: 480px;
+            width: 100%;
+        }
 
-        .header { text-align: center; margin-bottom: 24px; }
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
         .header h1 {
-            font-size: 24px; font-weight: 800;
+            font-size: 24px;
+            font-weight: 800;
             background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
-        .header p { color: var(--text-sub); font-size: 13px; }
 
+        .header p {
+            color: var(--text-sub);
+            font-size: 13px;
+        }
+
+        /* Category Section Title */
         .category-title {
-            font-size: 14px; font-weight: 700; color: #93c5fd; margin: 20px 0 10px 4px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #93c5fd;
+            margin: 20px 0 10px 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .package-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* Package Grid */
+        .package-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
 
+        .single-grid {
+            grid-template-columns: 1fr;
+        }
+
+        /* Glassmorphism Card Style */
         .card {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 16px;
-            position: relative; cursor: pointer;
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             user-select: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .card:hover {
+        /* 3D Pop / Touch Lift Animation */
+        .card:hover, .card:active {
             transform: translateY(-6px) scale(1.02);
             background: var(--glass-hover-bg);
             border-color: rgba(96, 165, 250, 0.4);
+            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.25);
         }
 
         .card.selected {
             border-color: #10b981;
             background: rgba(16, 185, 129, 0.08);
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            transform: translateY(-4px) scale(1.02);
         }
 
         .badge {
-            position: absolute; top: 12px; right: 12px;
-            font-size: 9px; font-weight: 700; padding: 3px 8px;
-            border-radius: 12px; text-transform: uppercase;
-            background: rgba(59, 130, 246, 0.25); color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .card-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #fff; }
-        .card-price { font-size: 18px; font-weight: 800; color: #10b981; }
+        .badge-green { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-blue { background: rgba(59, 130, 246, 0.25); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
 
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .card-price {
+            font-size: 18px;
+            font-weight: 800;
+            color: #10b981;
+        }
+
+        .card-price span {
+            font-size: 11px;
+            color: var(--text-sub);
+            font-weight: normal;
+        }
+
+        /* Bottom Fixed Action Panel */
         .order-footer {
-            margin-top: 24px; background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
-            padding: 16px; border-radius: 18px; text-align: center;
+            margin-top: 24px;
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 16px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .selected-plan { font-size: 15px; font-weight: bold; color: #34d399; margin-bottom: 12px; }
+        .selected-text {
+            font-size: 11px;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .selected-plan {
+            font-size: 15px;
+            font-weight: bold;
+            color: #34d399;
+            margin-bottom: 12px;
+        }
 
         .btn-action {
-            width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: white; padding: 14px 0; border-radius: 12px;
-            font-weight: bold; font-size: 15px; border: none; cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: white;
+            padding: 14px 0;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
         }
 
+        .btn-action:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        /* Service Guarantee Section */
         .guarantee-box {
-            margin-top: 24px; padding: 20px;
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border); border-radius: 18px;
-            font-size: 13px; color: #d1d5db; line-height: 1.7;
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            font-size: 13px;
+            color: #d1d5db;
+            line-height: 1.7;
         }
 
-        /* Modal Popup */
+        .guarantee-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            color: #f3f4f6;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .guarantee-list {
+            list-style: none;
+            margin-bottom: 14px;
+        }
+
+        .guarantee-list li {
+            margin-bottom: 6px;
+        }
+
+        .responsibility-box {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 12px 14px;
+            border-left: 3px solid #3b82f6;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .responsibility-title {
+            font-weight: bold;
+            color: #60a5fa;
+            margin-bottom: 4px;
+        }
+
+        /* Modal / Payment Popup Overlay */
         .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
-            z-index: 100; justify-content: center; align-items: center; padding: 16px;
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
         }
 
         .modal-card {
-            background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; width: 100%; max-width: 420px; padding: 22px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h2 {
+            font-size: 17px;
+            color: #f3f4f6;
+        }
+
+        .choice-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .btn-choice {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff; padding: 14px 16px; border-radius: 12px; font-size: 14px;
-            font-weight: 600; cursor: pointer; display: flex; justify-content: space-between;
-            width: 100%; margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
         }
 
-        .bank-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
-        .tab-btn {
-            flex: 1; padding: 10px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1); color: #9ca3af;
-            border-radius: 10px; font-weight: bold; cursor: pointer;
+        .btn-choice:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
         }
-        .tab-btn.active { background: #1e3a8a; color: #60a5fa; border-color: #3b82f6; }
+
+        .bank-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tab-btn.active-kbz {
+            background: #1e3a8a;
+            color: #60a5fa;
+            border-color: #3b82f6;
+        }
+
+        .tab-btn.active-wave {
+            background: #78350f;
+            color: #fcd34d;
+            border-color: #f59e0b;
+        }
 
         .payment-box {
-            background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 14px;
             border-left: 4px solid #3b82f6;
         }
 
-        .phone-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-        .btn-copy { background: rgba(255, 255, 255, 0.1); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+        .account-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        .phone-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .phone-num {
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .notice-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 14px;
+            font-size: 11px;
+            color: #fca5a5;
+            line-height: 1.6;
+        }
 
         .btn-telegram {
-            width: 100%; background: #10b981; color: white; padding: 12px 0;
-            border-radius: 10px; font-weight: bold; border: none; cursor: pointer; margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: #10b981;
+            color: white;
+            padding: 12px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            margin-top: 14px;
         }
-        .btn-back { background: transparent; color: #9ca3af; border: none; width: 100%; padding: 8px; cursor: pointer; }
+
+        .btn-back {
+            background: transparent;
+            color: #9ca3af;
+            border: none;
+            width: 100%;
+            padding: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -152,203 +428,244 @@
         <p>High-Speed Premium Packages</p>
     </div>
 
-    <!-- Firebase Dynamic Packages Content Container -->
-    <div id="packages-container">
-        <p style="text-align: center; color: #9ca3af;">Loading packages...</p>
+    <!-- 1. Unlimited Packages -->
+    <div class="category-title">💎 Unlimited Packages</div>
+    <div class="package-grid single-grid">
+        <div class="card" onclick="selectPackage(this, '30 Days Unlimited', '7,000 MMK')">
+            <span class="badge badge-green">UNLIMITED</span>
+            <div class="card-title">30 Days Unl.</div>
+            <div class="card-price">7,000 <span>MMK</span></div>
+        </div>
     </div>
 
+    <!-- 2. No Expire Packages -->
+    <div class="category-title">📦 No Expire Packages</div>
+    <div class="package-grid">
+        <div class="card" onclick="selectPackage(this, '100 GB (No Expire)', '5,000 MMK')">
+            <div class="card-title">100 GB</div>
+            <div class="card-price">5,000 <span>MMK</span></div>
+        </div>
+        <div class="card" onclick="selectPackage(this, '300 GB (No Expire)', '12,000 MMK')">
+            <span class="badge badge-blue">POPULAR</span>
+            <div class="card-title">300 GB</div>
+            <div class="card-price">12,000 <span>MMK</span></div>
+        </div>
+    </div>
+
+    <!-- 3. 30 Days Packages -->
+    <div class="category-title">⏳ 30 Days Packages</div>
+    <div class="package-grid">
+        <div class="card selected" onclick="selectPackage(this, '100 GB (30 Days)', '3,000 MMK')">
+            <div class="card-title">100 GB</div>
+            <div class="card-price">3,000 <span>MMK</span></div>
+        </div>
+        <div class="card" onclick="selectPackage(this, '300 GB (30 Days)', '7,000 MMK')">
+            <div class="card-title">300 GB</div>
+            <div class="card-price">7,000 <span>MMK</span></div>
+        </div>
+        <div class="card" onclick="selectPackage(this, '500 GB (30 Days)', '14,000 MMK')">
+            <span class="badge badge-blue">MAX DATA</span>
+            <div class="card-title">500 GB</div>
+            <div class="card-price">14,000 <span>MMK</span></div>
+        </div>
+    </div>
+
+    <!-- 4. 15 Days Packages -->
+    <div class="category-title">⏳ 15 Days Packages</div>
+    <div class="package-grid single-grid">
+        <div class="card" onclick="selectPackage(this, '50 GB (15 Days)', '1,500 MMK')">
+            <div class="card-title">50 GB</div>
+            <div class="card-price">1,500 <span>MMK</span></div>
+        </div>
+    </div>
+
+    <!-- Order Action Panel -->
     <div class="order-footer">
-        <div style="font-size: 11px; color: #9ca3af; margin-bottom: 4px;">SELECTED PACKAGE</div>
-        <div id="selected-plan" class="selected-plan">ကျေးဇူးပြု၍ Package တစ်ခု ရွေးချယ်ပါ</div>
-        <button onclick="openModal()" class="btn-action">Telegram Software ထဲ တိုက်ရိုက်သွားမည်</button>
+        <div class="selected-text">SELECTED PACKAGE</div>
+        <div id="selected-plan" class="selected-plan">100 GB (30 Days) • 3,000 MMK</div>
+        
+        <button onclick="openModal()" class="btn-action">
+            Telegram Software ထဲ တိုက်ရိုက်သွားမည်
+        </button>
     </div>
 
+    <!-- Guarantees & Terms Section -->
     <div class="guarantee-box">
-        <div style="text-align: center; font-weight: bold; margin-bottom: 10px;">🛡️ ဝန်ဆောင်မှု အာမခံချက်များ 🛡️</div>
-        <ul>
+        <div class="guarantee-title">🛡️ ဝန်ဆောင်မှု အာမခံချက်များ 🛡️</div>
+        <p style="margin-bottom: 8px; font-size: 12px; color: #9ca3af; text-align: center;">
+            ကျွန်ုပ်တို့၏ Key အသုံးပြုသူများအတွက် အောက်ပါတို့ကို အပြည့်အဝ တာဝန်ယူပါသည်။
+        </p>
+        <ul class="guarantee-list">
             <li>✅ IP Speed လျော့ခံရခြင်းမျိုး မရှိစေရပါ။</li>
             <li>✅ Key IP Ban ခံရခြင်းမျိုး လုံးဝမဖြစ်စေရပါ။</li>
             <li>✅ အသုံးပြုရ အဆင်ပြေချောမွေ့မှုရှိစေရမည်။</li>
         </ul>
-        <div style="margin-top: 12px; background: rgba(30, 41, 59, 0.5); padding: 10px; border-radius: 10px; border-left: 3px solid #3b82f6;">
-            <b>⚙️ ကျွန်ုပ်တို့၏ တာဝန်ယူမှု:</b> သက်တမ်း/GB မကုန်မချင်း မည်သည့် Error မဆို တာဝန်ယူ ဖြေရှင်းပေးပါမည်။
+
+        <div class="responsibility-box">
+            <div class="responsibility-title">⚙️ ကျွန်ုပ်တို့၏ တာဝန်ယူမှု</div>
+            သက်တမ်း (သို့) GB မကုန်ဆုံးခင်အထိ - မည်သည့် Error တစ်ခုခု ဖြစ်ပေါ်ပါက ကျွန်ုပ်တို့မှ ချက်ချင်းတာဝန်ယူ ဖြေရှင်းပေးပါမည်။ ဖြေရှင်းမရပါက Key အသစ်ဖြင့် လဲလှယ်ပေးသွားမှာ ဖြစ်လို့ စိတ်ချလက်ချ အသုံးပြုနိုင်ပါတယ်ခင်ဗျာ။
         </div>
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal Popup -->
 <div id="payment-modal" class="modal-overlay">
     <div class="modal-card">
+        
+        <!-- STEP 1: Choice -->
         <div id="step-choice">
-            <h2 style="text-align: center; margin-bottom: 12px; font-size: 16px;">ငွေပေးချေမှု နည်းလမ်း ရွေးချယ်ပါ</h2>
-            <div id="modal-plan-title" style="text-align: center; color: #10b981; font-size: 12px; margin-bottom: 14px;"></div>
-            <button class="btn-choice" onclick="showDirectPay()"><span>💳 ၁။ ငွေတန်းပေးချေမည်</span><span>➔</span></button>
-            <button class="btn-choice" onclick="redirectToTelegram('admin_chat')"><span>💬 ၂။ Admin နှင့် ပြောပြီးမှ ငွေချေမည်</span><span>➔</span></button>
+            <div class="modal-header">
+                <h2>ငွေပေးချေမှု နည်းလမ်း ရွေးချယ်ပါ</h2>
+                <div id="modal-plan-title" style="font-size: 12px; color: #10b981; margin-top: 4px;">
+                    Plan: 100 GB (30 Days) - 3,000 MMK
+                </div>
+            </div>
+
+            <div class="choice-container">
+                <button class="btn-choice" onclick="showDirectPay()">
+                    <span>💳 ၁။ ငွေတန်းပေးချေမည်</span>
+                    <span>➔</span>
+                </button>
+
+                <button class="btn-choice" onclick="redirectToTelegram('admin_chat')">
+                    <span>💬 ၂။ Admin နှင့် ပြောပြီးမှ ငွေချေမည်</span>
+                    <span>➔</span>
+                </button>
+            </div>
+
             <button onclick="closeModal()" class="btn-back">✕ ပိတ်မည်</button>
         </div>
 
+        <!-- STEP 2: Direct Pay -->
         <div id="step-pay" style="display: none;">
-            <h2 style="text-align: center; margin-bottom: 12px; font-size: 16px;">✨ PAYMENT DETAILS ✨</h2>
+            <div class="modal-header">
+                <h2>✨ PAYMENT DETAILS ✨</h2>
+            </div>
+
             <div class="bank-tabs">
-                <button id="tab-kbz" class="tab-btn active" onclick="switchBank('kbz')">🏦 KBZ Pay</button>
+                <button id="tab-kbz" class="tab-btn active-kbz" onclick="switchBank('kbz')">🏦 KBZ Pay</button>
                 <button id="tab-wave" class="tab-btn" onclick="switchBank('wave')">🏦 Wave Money</button>
             </div>
+
             <div id="bank-kbz-info" class="payment-box">
                 <div style="font-size: 12px; color: #60a5fa; font-weight: bold;">KBZ Pay Account</div>
-                <div id="kbz-name" class="account-name" style="color:#fff; font-weight:bold;">Loading...</div>
+                <div class="account-name">👤 Hein Htet Aung</div>
                 <div class="phone-row">
-                    <span id="kbz-phone" class="phone-num" style="color:#60a5fa; font-family:monospace;">-</span>
-                    <button class="btn-copy" onclick="copyNumber('kbz-phone', this)">Copy</button>
+                    <span class="phone-num">09767661201</span>
+                    <button class="btn-copy" onclick="copyNumber('09767661201', this)">Copy</button>
                 </div>
             </div>
+
             <div id="bank-wave-info" class="payment-box" style="display: none; border-left-color: #f59e0b;">
                 <div style="font-size: 12px; color: #fcd34d; font-weight: bold;">Wave Money Account</div>
-                <div id="wave-name" class="account-name" style="color:#fff; font-weight:bold;">Loading...</div>
+                <div class="account-name">👤 Hein Htet Aung</div>
                 <div class="phone-row">
-                    <span id="wave-phone" class="phone-num" style="color:#fcd34d; font-family:monospace;">-</span>
-                    <button class="btn-copy" onclick="copyNumber('wave-phone', this)">Copy</button>
+                    <span class="phone-num" style="color: #fcd34d;">09792005021</span>
+                    <button class="btn-copy" onclick="copyNumber('09792005021', this)">Copy</button>
                 </div>
             </div>
-            <button onclick="redirectToTelegram('slip_send')" class="btn-telegram">ငွေလွှဲပြေစာ ပို့မည် (Telegram)</button>
-            <button onclick="backToChoice()" class="btn-back">⬅ နောက်သို့</button>
+
+            <div class="notice-box">
+                📩 <b>ငွေလွှဲပြီးပါက Screenshot လေး ပို့ပေးပါ။</b><br>
+                💡 မှတ်ချက်တွင် <b>"Shop"</b> ဟုသာ ရေးပေးပါ။<br>
+                🚫 <b>"VPN"</b> ဟု လုံးဝ မရေးပါနှင့်။
+            </div>
+
+            <button onclick="redirectToTelegram('slip_send')" class="btn-telegram">
+                ငွေလွှဲပြေစာ ပို့မည် (Telegram)
+            </button>
+
+            <button onclick="backToChoice()" class="btn-back">⬅ နောက်သို့ ပြန်သွားမည်</button>
         </div>
+
     </div>
 </div>
 
 <script>
-    // ⚠️ မိမိ၏ Firebase Config အချက်အလက်များဖြင့် အစားထိုးပါ
-    const firebaseConfig = {
-        apiKey: "YOUR_FIREBASE_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-        projectId: "YOUR_PROJECT",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let currentPlanName = "";
-    let currentPlanPrice = "";
-    let telegramUsername = "akuma_edu";
-
-    // Realtime Database မှ Package များနှင့် Payment Data ယူခြင်း
-    db.ref().on('value', (snapshot) => {
-        const data = snapshot.val();
-        if(!data) return;
-
-        if(data.settings) {
-            telegramUsername = data.settings.telegramUsername || "akuma_edu";
-            document.getElementById('kbz-name').innerText = data.settings.kbzName || '-';
-            document.getElementById('kbz-phone').innerText = data.settings.kbzPhone || '-';
-            document.getElementById('wave-name').innerText = data.settings.waveName || '-';
-            document.getElementById('wave-phone').innerText = data.settings.wavePhone || '-';
-        }
-
-        if(data.packages) {
-            renderPackages(data.packages);
-        }
-    });
-
-    function renderPackages(packages) {
-        const container = document.getElementById('packages-container');
-        container.innerHTML = '';
-
-        // Category အလိုက် စုစည်းခြင်း
-        const categories = {};
-        Object.keys(packages).forEach(key => {
-            const pkg = packages[key];
-            if(!categories[pkg.category]) categories[pkg.category] = [];
-            categories[pkg.category].push({ id: key, ...pkg });
-        });
-
-        let firstPlanSelected = false;
-
-        Object.keys(categories).forEach(catName => {
-            const catHeader = document.createElement('div');
-            catHeader.className = 'category-title';
-            catHeader.innerText = catName;
-            container.appendChild(catHeader);
-
-            const grid = document.createElement('div');
-            grid.className = 'package-grid';
-
-            categories[catName].forEach((pkg, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                if(!firstPlanSelected) {
-                    card.classList.add('selected');
-                    selectPackage(card, pkg.name, pkg.price);
-                    firstPlanSelected = true;
-                }
-
-                card.onclick = () => selectPackage(card, pkg.name, pkg.price);
-                
-                let badgeHtml = pkg.badge ? `<span class="badge">${pkg.badge}</span>` : '';
-                card.innerHTML = `${badgeHtml}<div class="card-title">${pkg.name}</div><div class="card-price">${pkg.price}</div>`;
-                grid.appendChild(card);
-            });
-
-            container.appendChild(grid);
-        });
-    }
+    let currentPlanName = "100 GB (30 Days)";
+    let currentPlanPrice = "3,000 MMK";
+    const telegramUsername = "akuma_edu";
 
     function selectPackage(element, name, price) {
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => card.classList.remove('selected'));
+        
         element.classList.add('selected');
+
         currentPlanName = name;
         currentPlanPrice = price;
+
         document.getElementById('selected-plan').innerText = `${name} • ${price}`;
         document.getElementById('modal-plan-title').innerText = `Plan: ${name} (${price})`;
     }
 
     function openModal() {
-        if(!currentPlanName) return alert("Package တစ်ခုရွေးပါ");
         document.getElementById('step-choice').style.display = 'block';
         document.getElementById('step-pay').style.display = 'none';
         document.getElementById('payment-modal').style.display = 'flex';
     }
 
-    function closeModal() { document.getElementById('payment-modal').style.display = 'none'; }
+    function closeModal() {
+        document.getElementById('payment-modal').style.display = 'none';
+    }
+
     function showDirectPay() {
         document.getElementById('step-choice').style.display = 'none';
         document.getElementById('step-pay').style.display = 'block';
     }
+
     function backToChoice() {
         document.getElementById('step-pay').style.display = 'none';
         document.getElementById('step-choice').style.display = 'block';
     }
 
     function switchBank(type) {
-        if(type === 'kbz') {
-            document.getElementById('tab-kbz').className = 'tab-btn active';
-            document.getElementById('tab-wave').className = 'tab-btn';
-            document.getElementById('bank-kbz-info').style.display = 'block';
-            document.getElementById('bank-wave-info').style.display = 'none';
+        const kbzTab = document.getElementById('tab-kbz');
+        const waveTab = document.getElementById('tab-wave');
+        const kbzInfo = document.getElementById('bank-kbz-info');
+        const waveInfo = document.getElementById('bank-wave-info');
+
+        if (type === 'kbz') {
+            kbzTab.className = 'tab-btn active-kbz';
+            waveTab.className = 'tab-btn';
+            kbzInfo.style.display = 'block';
+            waveInfo.style.display = 'none';
         } else {
-            document.getElementById('tab-kbz').className = 'tab-btn';
-            document.getElementById('tab-wave').className = 'tab-btn active';
-            document.getElementById('bank-kbz-info').style.display = 'none';
-            document.getElementById('bank-wave-info').style.display = 'block';
+            kbzTab.className = 'tab-btn';
+            waveTab.className = 'tab-btn active-wave';
+            kbzInfo.style.display = 'none';
+            waveInfo.style.display = 'block';
         }
     }
 
-    function copyNumber(elemId, btn) {
-        const text = document.getElementById(elemId).innerText;
-        navigator.clipboard.writeText(text);
+    function copyNumber(num, btn) {
+        navigator.clipboard.writeText(num);
         btn.innerText = "Copied!";
-        setTimeout(() => btn.innerText = "Copy", 2000);
+        btn.style.background = "#10b981";
+        setTimeout(() => {
+            btn.innerText = "Copy";
+            btn.style.background = "rgba(255, 255, 255, 0.1)";
+        }, 2000);
     }
 
     function redirectToTelegram(mode) {
-        let message = mode === 'admin_chat' 
-            ? `မင်္ဂလာပါ Admin၊ ${currentPlanName} (${currentPlanPrice}) ဝယ်ယူချင်လို့ မေးမြန်းချင်ပါတယ်ခင်ဗျာ။`
-            : `မင်္ဂလာပါ၊ ${currentPlanName} (${currentPlanPrice}) အတွက် ငွေလွှဲပြေစာ ပို့ပေးလိုက်ပါတယ်ခင်ဗျာ။`;
+        let message = "";
+        if (mode === 'admin_chat') {
+            message = `မင်္ဂလာပါ Admin၊ ${currentPlanName} (${currentPlanPrice}) ဝယ်ယူချင်လို့ မေးမြန်းချင်ပါတယ်ခင်ဗျာ။`;
+        } else {
+            message = `မင်္ဂလာပါ၊ ${currentPlanName} (${currentPlanPrice}) အတွက် ငွေလွှဲပြေစာ ပို့ပေးလိုက်ပါတယ်ခင်ဗျာ။`;
+        }
 
         const encodedMessage = encodeURIComponent(message);
-        window.location.href = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
+        const appUrl = `tg://resolve?domain=${telegramUsername}&text=${encodedMessage}`;
+        const webUrl = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
+
+        window.location.href = appUrl;
+
+        setTimeout(() => {
+            if (document.hidden || document.webkitHidden) return;
+            window.location.href = webUrl;
+        }, 1500);
     }
 </script>
 
