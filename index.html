@@ -3,671 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MM HCM Team - Premium Fast VPN</title>
+    <title>VIP VPN Service & Free Keys</title>
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #090d16 50%, #1e1b4b 100%);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-hover-bg: rgba(255, 255, 255, 0.07);
-            --accent-green: #10b981;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --text-main: #f9fafb;
-            --text-sub: #9ca3af;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Pyidaungsu', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            padding: 24px 16px 40px 16px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 480px;
-            width: 100%;
-        }
-
-        /* Header Section */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .header p {
-            color: var(--text-sub);
-            font-size: 13px;
-        }
-
-        /* Category Section Title */
-        .category-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #93c5fd;
-            margin: 20px 0 10px 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Package Grid */
-        .package-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .single-grid {
-            grid-template-columns: 1fr;
-        }
-
-        /* Glassmorphism Card Style */
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 16px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            user-select: none;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 3D Pop / Touch Lift Animation */
-        .card:hover, .card:active {
-            transform: translateY(-6px) scale(1.02);
-            background: var(--glass-hover-bg);
-            border-color: rgba(96, 165, 250, 0.4);
-            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.25);
-        }
-
-        .card.selected {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.08);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-            transform: translateY(-4px) scale(1.02);
-        }
-
-        .badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-green { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .badge-blue { background: rgba(59, 130, 246, 0.25); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-
-        .card-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: #fff;
-        }
-
-        .card-price {
-            font-size: 18px;
-            font-weight: 800;
-            color: #10b981;
-        }
-
-        .card-price span {
-            font-size: 11px;
-            color: var(--text-sub);
-            font-weight: normal;
-        }
-
-        /* Bottom Fixed Action Panel */
-        .order-footer {
-            margin-top: 24px;
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            padding: 16px;
-            border-radius: 18px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .selected-text {
-            font-size: 11px;
-            color: var(--text-sub);
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-
-        .selected-plan {
-            font-size: 15px;
-            font-weight: bold;
-            color: #34d399;
-            margin-bottom: 12px;
-        }
-
-        .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: white;
-            padding: 14px 0;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 15px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
-        }
-
-        .btn-action:hover {
-            opacity: 0.95;
-            transform: translateY(-1px);
-        }
-
-        /* Service Guarantee Section */
-        .guarantee-box {
-            margin-top: 24px;
-            padding: 20px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            font-size: 13px;
-            color: #d1d5db;
-            line-height: 1.7;
-        }
-
-        .guarantee-title {
-            text-align: center;
-            font-size: 15px;
-            font-weight: bold;
-            color: #f3f4f6;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-        }
-
-        .guarantee-list {
-            list-style: none;
-            margin-bottom: 14px;
-        }
-
-        .guarantee-list li {
-            margin-bottom: 6px;
-        }
-
-        .responsibility-box {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 12px;
-            padding: 12px 14px;
-            border-left: 3px solid #3b82f6;
-            font-size: 12px;
-            color: #9ca3af;
-        }
-
-        .responsibility-title {
-            font-weight: bold;
-            color: #60a5fa;
-            margin-bottom: 4px;
-        }
-
-        /* Modal / Payment Popup Overlay */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-
-        .modal-card {
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 420px;
-            padding: 22px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-header h2 {
-            font-size: 17px;
-            color: #f3f4f6;
-        }
-
-        .choice-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn-choice {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 14px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s;
-        }
-
-        .btn-choice:hover {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.15);
-        }
-
-        .bank-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #9ca3af;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .tab-btn.active-kbz {
-            background: #1e3a8a;
-            color: #60a5fa;
-            border-color: #3b82f6;
-        }
-
-        .tab-btn.active-wave {
-            background: #78350f;
-            color: #fcd34d;
-            border-color: #f59e0b;
-        }
-
-        .payment-box {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 14px;
-            border-left: 4px solid #3b82f6;
-        }
-
-        .account-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            margin-top: 4px;
-        }
-
-        .phone-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 8px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-
-        .phone-num {
-            font-family: monospace;
-            font-size: 16px;
-            font-weight: bold;
-            color: #60a5fa;
-        }
-
-        .btn-copy {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .notice-box {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 14px;
-            font-size: 11px;
-            color: #fca5a5;
-            line-height: 1.6;
-        }
-
-        .btn-telegram {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            background: #10b981;
-            color: white;
-            padding: 12px 0;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            margin-top: 14px;
-        }
-
-        .btn-back {
-            background: transparent;
-            color: #9ca3af;
-            border: none;
-            width: 100%;
-            padding: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-top: 8px;
-        }
+        body { font-family: 'Padauk', sans-serif; background: #0f172a; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between">
 
-<div class="container">
-    <div class="header">
-        <h1>MM HCM Team VPN</h1>
-        <p>High-Speed Premium Packages</p>
-    </div>
-
-    <!-- 1. Unlimited Packages -->
-    <div class="category-title">💎 Unlimited Packages</div>
-    <div class="package-grid single-grid">
-        <div class="card" onclick="selectPackage(this, '30 Days Unlimited', '7,000 MMK')">
-            <span class="badge badge-green">UNLIMITED</span>
-            <div class="card-title">30 Days Unl.</div>
-            <div class="card-price">7,000 <span>MMK</span></div>
+    <!-- Header -->
+    <header class="p-5 border-b border-slate-800 glass sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-400 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved"></i> VIP VPN STORE
+            </h1>
+            <a href="admin.html" class="text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                <i class="fa-solid fa-lock mr-1"></i> Admin
+            </a>
         </div>
-    </div>
+    </header>
 
-    <!-- 2. No Expire Packages -->
-    <div class="category-title">📦 No Expire Packages</div>
-    <div class="package-grid">
-        <div class="card" onclick="selectPackage(this, '100 GB (No Expire)', '5,000 MMK')">
-            <div class="card-title">100 GB</div>
-            <div class="card-price">5,000 <span>MMK</span></div>
-        </div>
-        <div class="card" onclick="selectPackage(this, '300 GB (No Expire)', '12,000 MMK')">
-            <span class="badge badge-blue">POPULAR</span>
-            <div class="card-title">300 GB</div>
-            <div class="card-price">12,000 <span>MMK</span></div>
-        </div>
-    </div>
+    <main class="max-w-6xl mx-auto p-4 space-y-10 my-6 w-full">
 
-    <!-- 3. 30 Days Packages -->
-    <div class="category-title">⏳ 30 Days Packages</div>
-    <div class="package-grid">
-        <div class="card selected" onclick="selectPackage(this, '100 GB (30 Days)', '3,000 MMK')">
-            <div class="card-title">100 GB</div>
-            <div class="card-price">3,000 <span>MMK</span></div>
-        </div>
-        <div class="card" onclick="selectPackage(this, '300 GB (30 Days)', '7,000 MMK')">
-            <div class="card-title">300 GB</div>
-            <div class="card-price">7,000 <span>MMK</span></div>
-        </div>
-        <div class="card" onclick="selectPackage(this, '500 GB (30 Days)', '14,000 MMK')">
-            <span class="badge badge-blue">MAX DATA</span>
-            <div class="card-title">500 GB</div>
-            <div class="card-price">14,000 <span>MMK</span></div>
-        </div>
-    </div>
+        <!-- Banner -->
+        <section class="text-center space-y-3 py-6">
+            <h2 class="text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                မြန်ဆန်စိတ်ချရသော VPN ဝန်ဆောင်မှု
+            </h2>
+            <p class="text-slate-400 text-sm md:text-base">Free Keys များ၏ လက်ကျန် GB ကို Live ကြည့်ရှုနိုင်သလို မိမိဝယ်ယူထားသော Key များ၏ Data ကိုလည်း စစ်ဆေးနိုင်ပါသည်။</p>
+        </section>
 
-    <!-- 4. 15 Days Packages -->
-    <div class="category-title">⏳ 15 Days Packages</div>
-    <div class="package-grid single-grid">
-        <div class="card" onclick="selectPackage(this, '50 GB (15 Days)', '1,500 MMK')">
-            <div class="card-title">50 GB</div>
-            <div class="card-price">1,500 <span>MMK</span></div>
-        </div>
-    </div>
-
-    <!-- Order Action Panel -->
-    <div class="order-footer">
-        <div class="selected-text">SELECTED PACKAGE</div>
-        <div id="selected-plan" class="selected-plan">100 GB (30 Days) • 3,000 MMK</div>
-        
-        <button onclick="openModal()" class="btn-action">
-            Telegram Software ထဲ တိုက်ရိုက်သွားမည်
-        </button>
-    </div>
-
-    <!-- Guarantees & Terms Section -->
-    <div class="guarantee-box">
-        <div class="guarantee-title">🛡️ ဝန်ဆောင်မှု အာမခံချက်များ 🛡️</div>
-        <p style="margin-bottom: 8px; font-size: 12px; color: #9ca3af; text-align: center;">
-            ကျွန်ုပ်တို့၏ Key အသုံးပြုသူများအတွက် အောက်ပါတို့ကို အပြည့်အဝ တာဝန်ယူပါသည်။
-        </p>
-        <ul class="guarantee-list">
-            <li>✅ IP Speed လျော့ခံရခြင်းမျိုး မရှိစေရပါ။</li>
-            <li>✅ Key IP Ban ခံရခြင်းမျိုး လုံးဝမဖြစ်စေရပါ။</li>
-            <li>✅ အသုံးပြုရ အဆင်ပြေချောမွေ့မှုရှိစေရမည်။</li>
-        </ul>
-
-        <div class="responsibility-box">
-            <div class="responsibility-title">⚙️ ကျွန်ုပ်တို့၏ တာဝန်ယူမှု</div>
-            သက်တမ်း (သို့) GB မကုန်ဆုံးခင်အထိ - မည်သည့် Error တစ်ခုခု ဖြစ်ပေါ်ပါက ကျွန်ုပ်တို့မှ ချက်ချင်းတာဝန်ယူ ဖြေရှင်းပေးပါမည်။ ဖြေရှင်းမရပါက Key အသစ်ဖြင့် လဲလှယ်ပေးသွားမှာ ဖြစ်လို့ စိတ်ချလက်ချ အသုံးပြုနိုင်ပါတယ်ခင်ဗျာ။
-        </div>
-    </div>
-</div>
-
-<!-- Modal Popup -->
-<div id="payment-modal" class="modal-overlay">
-    <div class="modal-card">
-        
-        <!-- STEP 1: Choice -->
-        <div id="step-choice">
-            <div class="modal-header">
-                <h2>ငွေပေးချေမှု နည်းလမ်း ရွေးချယ်ပါ</h2>
-                <div id="modal-plan-title" style="font-size: 12px; color: #10b981; margin-top: 4px;">
-                    Plan: 100 GB (30 Days) - 3,000 MMK
-                </div>
-            </div>
-
-            <div class="choice-container">
-                <button class="btn-choice" onclick="showDirectPay()">
-                    <span>💳 ၁။ ငွေတန်းပေးချေမည်</span>
-                    <span>➔</span>
+        <!-- Search / Client Self-Check Section -->
+        <section class="glass p-6 rounded-2xl glow max-w-2xl mx-auto space-y-4">
+            <h3 class="text-xl font-bold text-blue-400 flex items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass"></i> မိမိ အကောင့် လက်ကျန် GB စစ်ဆေးရန်
+            </h3>
+            <div class="flex gap-2">
+                <input type="text" id="searchClientInput" placeholder="မိမိ၏ Username သို့မဟုတ် Email ရိုက်ထည့်ပါ..." 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500">
+                <button onclick="checkClientData()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-search"></i> စစ်ဆေးမည်
                 </button>
+            </div>
+            
+            <!-- Result Box -->
+            <div id="checkResult" class="hidden mt-4 p-4 rounded-xl border border-slate-700 bg-slate-900/80 space-y-2"></div>
+        </section>
 
-                <button class="btn-choice" onclick="redirectToTelegram('admin_chat')">
-                    <span>💬 ၂။ Admin နှင့် ပြောပြီးမှ ငွေချေမည်</span>
-                    <span>➔</span>
+        <!-- Free Keys Live Status Section -->
+        <section class="space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-emerald-400 flex items-center gap-2">
+                    <i class="fa-solid fa-gift"></i> Free Keys (Live GB Status)
+                </h3>
+                <button onclick="loadFreeKeys()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+                    <i class="fa-solid fa-rotate-right"></i> Refresh
                 </button>
             </div>
 
-            <button onclick="closeModal()" class="btn-back">✕ ပိတ်မည်</button>
-        </div>
-
-        <!-- STEP 2: Direct Pay -->
-        <div id="step-pay" style="display: none;">
-            <div class="modal-header">
-                <h2>✨ PAYMENT DETAILS ✨</h2>
+            <div id="freeKeysContainer" class="grid md:grid-cols-2 gap-4">
+                <div class="glass p-5 rounded-2xl text-center text-slate-400">Free Keys များကို ရယူနေပါသည်...</div>
             </div>
+        </section>
 
-            <div class="bank-tabs">
-                <button id="tab-kbz" class="tab-btn active-kbz" onclick="switchBank('kbz')">🏦 KBZ Pay</button>
-                <button id="tab-wave" class="tab-btn" onclick="switchBank('wave')">🏦 Wave Money</button>
-            </div>
+    </main>
 
-            <div id="bank-kbz-info" class="payment-box">
-                <div style="font-size: 12px; color: #60a5fa; font-weight: bold;">KBZ Pay Account</div>
-                <div class="account-name">👤 Hein Htet Aung</div>
-                <div class="phone-row">
-                    <span class="phone-num">09767661201</span>
-                    <button class="btn-copy" onclick="copyNumber('09767661201', this)">Copy</button>
-                </div>
-            </div>
+    <!-- Footer -->
+    <footer class="p-6 text-center text-slate-500 text-sm border-t border-slate-800">
+        &copy; 2026 VIP VPN Service. All rights reserved.
+    </footer>
 
-            <div id="bank-wave-info" class="payment-box" style="display: none; border-left-color: #f59e0b;">
-                <div style="font-size: 12px; color: #fcd34d; font-weight: bold;">Wave Money Account</div>
-                <div class="account-name">👤 Hein Htet Aung</div>
-                <div class="phone-row">
-                    <span class="phone-num" style="color: #fcd34d;">09792005021</span>
-                    <button class="btn-copy" onclick="copyNumber('09792005021', this)">Copy</button>
-                </div>
-            </div>
+    <script>
+        // Load Free Keys on Page Load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadFreeKeys();
+        });
 
-            <div class="notice-box">
-                📩 <b>ငွေလွှဲပြီးပါက Screenshot လေး ပို့ပေးပါ။</b><br>
-                💡 မှတ်ချက်တွင် <b>"Shop"</b> ဟုသာ ရေးပေးပါ။<br>
-                🚫 <b>"VPN"</b> ဟု လုံးဝ မရေးပါနှင့်။
-            </div>
-
-            <button onclick="redirectToTelegram('slip_send')" class="btn-telegram">
-                ငွေလွှဲပြေစာ ပို့မည် (Telegram)
-            </button>
-
-            <button onclick="backToChoice()" class="btn-back">⬅ နောက်သို့ ပြန်သွားမည်</button>
-        </div>
-
-    </div>
-</div>
-
-<script>
-    let currentPlanName = "100 GB (30 Days)";
-    let currentPlanPrice = "3,000 MMK";
-    const telegramUsername = "akuma_edu";
-
-    function selectPackage(element, name, price) {
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => card.classList.remove('selected'));
-        
-        element.classList.add('selected');
-
-        currentPlanName = name;
-        currentPlanPrice = price;
-
-        document.getElementById('selected-plan').innerText = `${name} • ${price}`;
-        document.getElementById('modal-plan-title').innerText = `Plan: ${name} (${price})`;
-    }
-
-    function openModal() {
-        document.getElementById('step-choice').style.display = 'block';
-        document.getElementById('step-pay').style.display = 'none';
-        document.getElementById('payment-modal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('payment-modal').style.display = 'none';
-    }
-
-    function showDirectPay() {
-        document.getElementById('step-choice').style.display = 'none';
-        document.getElementById('step-pay').style.display = 'block';
-    }
-
-    function backToChoice() {
-        document.getElementById('step-pay').style.display = 'none';
-        document.getElementById('step-choice').style.display = 'block';
-    }
-
-    function switchBank(type) {
-        const kbzTab = document.getElementById('tab-kbz');
-        const waveTab = document.getElementById('tab-wave');
-        const kbzInfo = document.getElementById('bank-kbz-info');
-        const waveInfo = document.getElementById('bank-wave-info');
-
-        if (type === 'kbz') {
-            kbzTab.className = 'tab-btn active-kbz';
-            waveTab.className = 'tab-btn';
-            kbzInfo.style.display = 'block';
-            waveInfo.style.display = 'none';
-        } else {
-            kbzTab.className = 'tab-btn';
-            waveTab.className = 'tab-btn active-wave';
-            kbzInfo.style.display = 'none';
-            waveInfo.style.display = 'block';
-        }
-    }
-
-    function copyNumber(num, btn) {
-        navigator.clipboard.writeText(num);
-        btn.innerText = "Copied!";
-        btn.style.background = "#10b981";
-        setTimeout(() => {
-            btn.innerText = "Copy";
-            btn.style.background = "rgba(255, 255, 255, 0.1)";
-        }, 2000);
-    }
-
-    function redirectToTelegram(mode) {
-        let message = "";
-        if (mode === 'admin_chat') {
-            message = `မင်္ဂလာပါ Admin၊ ${currentPlanName} (${currentPlanPrice}) ဝယ်ယူချင်လို့ မေးမြန်းချင်ပါတယ်ခင်ဗျာ။`;
-        } else {
-            message = `မင်္ဂလာပါ၊ ${currentPlanName} (${currentPlanPrice}) အတွက် ငွေလွှဲပြေစာ ပို့ပေးလိုက်ပါတယ်ခင်ဗျာ။`;
+        async function getBackendConfig() {
+            const config = localStorage.getItem("vpn_config");
+            return config ? JSON.parse(config) : null;
         }
 
-        const encodedMessage = encodeURIComponent(message);
-        const appUrl = `tg://resolve?domain=${telegramUsername}&text=${encodedMessage}`;
-        const webUrl = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
+        async function fetch3XUIClient(server, email) {
+            try {
+                // Connect through 3X-UI Login & API
+                const loginUrl = `${server.url}${server.subpath || ''}/login`;
+                const searchUrl = `${server.url}${server.subpath || ''}/panel/api/inbounds/list`;
 
-        window.location.href = appUrl;
+                // Note: Direct CORS request to 3X-UI needs CORS allowed or same-origin/proxy.
+                // Requesting Client List from Server
+                const res = await fetch(searchUrl, { credentials: 'include' });
+                if (!res.ok) return null;
+                
+                const data = await res.json();
+                if (!data.success) return null;
 
-        setTimeout(() => {
-            if (document.hidden || document.webkitHidden) return;
-            window.location.href = webUrl;
-        }, 1500);
-    }
-</script>
+                for (let inbound of data.obj) {
+                    const settings = JSON.parse(inbound.settings || '{}');
+                    const clients = settings.clients || [];
+                    const client = clients.find(c => c.email.toLowerCase() === email.toLowerCase());
+                    const clientStats = (inbound.clientStats || []).find(c => c.email.toLowerCase() === email.toLowerCase());
 
+                    if (client) {
+                        const up = clientStats ? clientStats.up : 0;
+                        const down = clientStats ? clientStats.down : 0;
+                        const totalUsed = up + down;
+                        const totalData = client.totalGB || 0; // Bytes or GB
+                        
+                        return {
+                            email: client.email,
+                            usedGB: (totalUsed / (1024 * 1024 * 1024)).toFixed(2),
+                            totalGB: totalData > 0 ? (totalData / (1024 * 1024 * 1024)).toFixed(2) : "Unlimited",
+                            remainingGB: totalData > 0 ? Math.max(0, (totalData - totalUsed) / (1024 * 1024 * 1024)).toFixed(2) : "Unlimited",
+                            expiry: client.expiryTime > 0 ? new Date(client.expiryTime).toLocaleDateString("my-MM") : "သက်တမ်းမကုန်ပါ",
+                            enable: client.enable
+                        };
+                    }
+                }
+            } catch (err) {
+                console.error("API Error:", err);
+            }
+            return null;
+        }
+
+        async function checkClientData() {
+            const email = document.getElementById("searchClientInput").value.trim();
+            const resultBox = document.getElementById("checkResult");
+            if (!email) return alert("Username သို့မဟုတ် Email ရိုက်ထည့်ပါ!");
+
+            resultBox.classList.remove("hidden");
+            resultBox.innerHTML = `<p class="text-slate-400"><i class="fa-solid fa-spinner fa-spin"></i> Server ၃ ခုစလုံးတွင် ရှာဖွေနေပါသည်...</p>`;
+
+            const config = await getBackendConfig();
+            if (!config || !config.servers) {
+                resultBox.innerHTML = `<p class="text-red-400">Admin Panel တွင် Server များ မပြင်ဆင်ရသေးပါ။</p>`;
+                return;
+            }
+
+            let foundData = null;
+            let foundServerName = "";
+
+            for (let server of config.servers) {
+                if (!server.url) continue;
+                const clientData = await fetch3XUIClient(server, email);
+                if (clientData) {
+                    foundData = clientData;
+                    foundServerName = server.name;
+                    break;
+                }
+            }
+
+            if (foundData) {
+                resultBox.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-blue-400"><i class="fa-solid fa-user-check"></i> ${foundData.email}</span>
+                            <span class="text-xs px-2 py-0.5 rounded ${foundData.enable ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400'}">${foundData.enable ? 'Active' : 'Disabled'}</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Server: <span class="text-slate-200 font-bold">${foundServerName}</span></p>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs pt-2">
+                            <div class="bg-slate-800/60 p-2 rounded-lg">
+                                <span class="block text-slate-400">သုံးပြီးသမျှ</span>
+                                <span class="font-bold text-slate-200">${foundData.usedGB} GB</span>
+                            </div>
+                            <div class="bg-slate-800/60 p-2 rounded-lg">
+                                <span class="block text-slate-400">ကျန်ရှိ GB</span>
+                                <span class="font-bold text-emerald-400">${foundData.remainingGB} ${foundData.remainingGB !== 'Unlimited' ? 'GB' : ''}</span>
+                            </div>
+                            <div class="bg-slate-800/60 p-2 rounded-lg">
+                                <span class="block text-slate-400">သက်တမ်းကုန်ရက်</span>
+                                <span class="font-bold text-indigo-400">${foundData.expiry}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultBox.innerHTML = `<p class="text-red-400 text-sm"><i class="fa-solid fa-circle-exclamation"></i> အကောင့် ရှာမတွေ့ပါ သို့မဟုတ် Server ချိတ်ဆက်၍ မရပါ။</p>`;
+            }
+        }
+
+        async function loadFreeKeys() {
+            const container = document.getElementById("freeKeysContainer");
+            const config = await getBackendConfig();
+
+            if (!config || !config.freeKeys || config.freeKeys.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-2 glass p-6 rounded-2xl text-center text-slate-400">
+                        လက်ရှိတွင် Free Key များ မထည့်သွင်းရသေးပါ။ (Admin Panel မှ ထည့်သွင်းနိုင်ပါသည်။)
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = "";
+            for (let keyItem of config.freeKeys) {
+                const server = config.servers.find(s => s.id === keyItem.serverId);
+                let liveData = null;
+                if (server) {
+                    liveData = await fetch3XUIClient(server, keyItem.email);
+                }
+
+                const usedGB = liveData ? parseFloat(liveData.usedGB) : 0;
+                const totalGB = liveData && liveData.totalGB !== "Unlimited" ? parseFloat(liveData.totalGB) : (keyItem.defaultGB || 100);
+                const remainingGB = liveData ? liveData.remainingGB : (totalGB - usedGB).toFixed(2);
+                const percent = Math.min(100, Math.max(0, (usedGB / totalGB) * 100)).toFixed(1);
+
+                container.innerHTML += `
+                    <div class="glass p-5 rounded-2xl space-y-3 relative border border-emerald-500/20">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-200">${keyItem.label || keyItem.email}</h4>
+                                <span class="text-xs text-emerald-400"><i class="fa-solid fa-wifi"></i> Online Live Status</span>
+                            </div>
+                            <button onclick="navigator.clipboard.writeText('${keyItem.vlessConfig || keyItem.email}'); alert('Key ကို Copy ကူးပြီးပါပြီ!')" 
+                                class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-copy"></i> Copy Key
+                            </button>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs text-slate-400">
+                                <span>သုံးပြီး: ${usedGB} GB</span>
+                                <span>ကျန်: <strong class="text-emerald-400">${remainingGB} GB</strong> / ${totalGB} GB</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>
