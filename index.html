@@ -132,7 +132,7 @@
             margin-top: 6px;
         }
 
-        /* Selected Footer Box */
+        /* Footer / Selected Section */
         .order-footer {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -142,9 +142,9 @@
         }
 
         .selected-text {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-sub);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .selected-plan {
@@ -154,29 +154,27 @@
             margin-bottom: 12px;
         }
 
-        .btn-order {
+        .btn-pay {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             width: 100%;
-            background: #229ED9;
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            padding: 12px 0;
+            padding: 13px 0;
             border-radius: 10px;
-            text-decoration: none;
             font-weight: bold;
             font-size: 15px;
             border: none;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s;
         }
 
-        .btn-order:hover {
-            background: #1d8ec3;
+        .btn-pay:hover {
+            opacity: 0.9;
         }
 
-        /* Guarantees Notice */
         .guarantee-box {
             margin-top: 18px;
             padding: 14px;
@@ -189,6 +187,147 @@
 
         .guarantee-box b {
             color: #f3f4f6;
+        }
+
+        /* Modal / Payment Popup Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .modal-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #374151;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            color: #f3f4f6;
+            letter-spacing: 1px;
+        }
+
+        /* Payment Card Item */
+        .payment-box {
+            background: #1f2937;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            border-left: 4px solid #10b981;
+        }
+
+        .payment-box.wave {
+            border-left-color: #f59e0b;
+        }
+
+        .bank-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #9ca3af;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .phone-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 6px;
+            background: #111827;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .phone-num {
+            font-family: monospace;
+            font-size: 15px;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        .btn-copy {
+            background: #374151;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .btn-copy:hover {
+            background: #4b5563;
+        }
+
+        .notice-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 14px;
+            font-size: 11px;
+            color: #fca5a5;
+            line-height: 1.5;
+        }
+
+        .btn-telegram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: #229ED9;
+            color: white;
+            padding: 12px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            margin-top: 14px;
+        }
+
+        .btn-close {
+            background: transparent;
+            color: #9ca3af;
+            border: none;
+            width: 100%;
+            padding: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 6px;
         }
     </style>
 </head>
@@ -222,7 +361,7 @@
         </div>
 
         <!-- Card 3 -->
-        <div class="card selected" id="default-card" onclick="selectPackage(this, 'Data Pack Lite (No Expire)', '5,000 Ks')">
+        <div class="card selected" onclick="selectPackage(this, 'Data Pack Lite (No Expire)', '5,000 Ks')">
             <div class="card-type">NO EXPIRE</div>
             <div class="card-title">Data Pack Lite</div>
             <div class="card-price">5K <span>/ 5,000 Ks</span></div>
@@ -265,14 +404,13 @@
 
     </div>
 
-    <!-- Selected Info & Direct Order Button -->
+    <!-- Selected Info & Pay Button -->
     <div class="order-footer">
         <div class="selected-text">SELECTED PACKAGE</div>
-        <div id="selected-plan" class="selected-plan">No Expire (Data Pack Lite) • 5,000 Ks</div>
+        <div id="selected-plan" class="selected-plan">Data Pack Lite (No Expire) • 5,000 Ks</div>
         
-        <button onclick="openTelegram()" class="btn-order">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-            Telegram Software ထဲ တိုက်ရိုက်သွားမည်
+        <button onclick="openModal()" class="btn-pay">
+            💳 ငွေပေးချေရန် အကောင့်ကြည့်မည်
         </button>
     </div>
 
@@ -284,41 +422,101 @@
     </div>
 </div>
 
+<!-- Modal / Payment Details Popup -->
+<div id="payment-modal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>✨ PAYMENT DETAILS ✨</h2>
+            <div id="modal-selected-plan" style="font-size: 13px; color: #10b981; margin-top: 4px; font-weight: bold;">
+                Plan: Data Pack Lite (5,000 Ks)
+            </div>
+        </div>
+
+        <!-- KBZ Pay -->
+        <div class="payment-box">
+            <div class="bank-title">
+                <span>🏦 KBZ Pay</span>
+            </div>
+            <div class="account-name">👤 Hein Htet Aung</div>
+            <div class="phone-row">
+                <span class="phone-num">09767661201</span>
+                <button class="btn-copy" onclick="copyNumber('09767661201', this)">Copy</button>
+            </div>
+        </div>
+
+        <!-- Wave Money -->
+        <div class="payment-box wave">
+            <div class="bank-title">
+                <span style="color: #f59e0b;">🏦 Wave Money</span>
+            </div>
+            <div class="account-name">👤 Hein Htet Aung</div>
+            <div class="phone-row">
+                <span class="phone-num">09792005021</span>
+                <button class="btn-copy" onclick="copyNumber('09792005021', this)">Copy</button>
+            </div>
+        </div>
+
+        <!-- Notices -->
+        <div class="notice-box">
+            📩 <b>ငွေလွှဲပြီးပါက Screenshot လေး ပို့ပေးပါ။</b><br>
+            💡 မှတ်ချက်တွင် <b>"Shop"</b> ဟုသာ ရေးပေးပါ။<br>
+            🚫 <b>"VPN"</b> ဟု လုံးဝ မရေးပါနှင့်။
+        </div>
+
+        <button onclick="openTelegram()" class="btn-telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+            ငွေလွှဲပြေစာ ပို့မည် (Telegram)
+        </button>
+
+        <button onclick="closeModal()" class="btn-close">✕ ပိတ်မည်</button>
+    </div>
+</div>
+
 <script>
-    // Selected states
     let currentPlanName = "Data Pack Lite (No Expire)";
     let currentPlanPrice = "5,000 Ks";
     const telegramUsername = "akuma_edu";
 
     function selectPackage(element, name, price) {
-        // Remove 'selected' class from all cards
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => card.classList.remove('selected'));
         
-        // Add 'selected' class to clicked card
         element.classList.add('selected');
 
         currentPlanName = name;
         currentPlanPrice = price;
 
-        // Update Text
         document.getElementById('selected-plan').innerText = `${name} • ${price}`;
+        document.getElementById('modal-selected-plan').innerText = `Plan: ${name} (${price})`;
+    }
+
+    function openModal() {
+        document.getElementById('payment-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('payment-modal').style.display = 'none';
+    }
+
+    function copyNumber(num, btn) {
+        navigator.clipboard.writeText(num);
+        btn.innerText = "Copied!";
+        btn.style.background = "#10b981";
+        setTimeout(() => {
+            btn.innerText = "Copy";
+            btn.style.background = "#374151";
+        }, 2000);
     }
 
     function openTelegram() {
-        const message = `Hello, MM HCM Team မှ VPN ဝယ်ယူချင်လို့ပါခင်ဗျာ။\n\n- Selected Package: ${currentPlanName}\n- Price: ${currentPlanPrice}`;
+        const message = `Hello, MM HCM Team VPN ဝယ်ယူပြီး ငွေလွှဲပြေစာ ပို့ပေးလိုက်ပါတယ်ခင်ဗျာ။\n\n- Package: ${currentPlanName}\n- Price: ${currentPlanPrice}`;
         const encodedMessage = encodeURIComponent(message);
         
-        // 1. Direct App Protocol (Opens Telegram App/Desktop Software directly)
         const appUrl = `tg://resolve?domain=${telegramUsername}&text=${encodedMessage}`;
-        
-        // 2. Web Fallback (If app is not installed)
         const webUrl = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
 
-        // Attempt to open native software directly
         window.location.href = appUrl;
 
-        // Fallback to web link if native protocol doesn't trigger within 1.5 seconds
         setTimeout(() => {
             if (document.hidden || document.webkitHidden) return;
             window.location.href = webUrl;
