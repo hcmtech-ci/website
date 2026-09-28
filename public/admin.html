@@ -11,7 +11,7 @@
         .login-box { background: #1e293b; padding: 35px; border-radius: 12px; width: 350px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .login-box h3 { margin-top: 0; color: #38bdf8; }
 
-        /* Windows Settings Sidebar Style */
+        /* Sidebar Style */
         .sidebar { width: 260px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; display: flex; flex-direction: column; }
         .sidebar h2 { font-size: 16px; margin-bottom: 20px; color: #38bdf8; padding-left: 10px; }
         .menu-item { padding: 12px 15px; margin-bottom: 6px; cursor: pointer; border-radius: 8px; font-size: 14px; color: #cbd5e1; transition: 0.2s; }
@@ -27,6 +27,10 @@
         input, select, button { width: 100%; padding: 12px; margin-top: 12px; border-radius: 6px; border: 1px solid #475569; background: #1e293b; color: #fff; box-sizing: border-box; font-size: 14px; }
         button { background: #06b6d4; border: none; font-weight: bold; cursor: pointer; }
         button:hover { background: #0891b2; }
+
+        .inbound-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .inbound-card { background: #1e293b; border: 1px solid #475569; padding: 10px; text-align: center; border-radius: 6px; cursor: pointer; }
+        .inbound-card.selected { border-color: #38bdf8; background: #0284c7; }
     </style>
 </head>
 <body>
@@ -41,57 +45,69 @@
         </div>
     </div>
 
-    <!-- Windows Settings Sidebar -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <h2>⚙️ Admin Settings</h2>
-        <div class="menu-item active" onclick="switchTab('sgServer')">🖥️ SG Server Config</div>
-        <div class="menu-item" onclick="switchTab('freeServer')">🎁 Free Server Config</div>
-        <div class="menu-item" onclick="switchTab('vipServer')">💎 VIP Server Management</div>
+        <div class="menu-item active" onclick="switchTab('dashboard')">📊 Dashboard</div>
+        <div class="menu-item" onclick="switchTab('manager')">📂 3X-UI Manager</div>
     </div>
 
     <!-- Main Content Panels -->
     <div class="content">
-        <!-- SG Server Panel -->
-        <div id="sgServer" class="panel-section active">
-            <h3>SG Server ဆက်တင်များ (Admin Only)</h3>
-            <input type="text" id="sgUrl" placeholder="Server URL (ဥပမာ- https://domain.com:17079)">
-            <input type="text" id="sgSubpath" placeholder="Web Subpath (ဥပမာ- /XF46q...)">
-            <input type="text" id="sgUser" placeholder="3X-UI Panel Username">
-            <input type="password" id="sgPass" placeholder="3X-UI Panel Password">
-            <button onclick="saveConfig('sg')">SG Server သိမ်းဆည်းမည်</button>
+        <!-- Dashboard & Panel Config -->
+        <div id="dashboard" class="panel-section active">
+            <h3>3X-UI Panels စီမံခန့်ခွဲရန်</h3>
+            <button onclick="togglePanelForm()" style="background: #10b981; width: auto; padding: 8px 15px;">➕ Panel အသစ်ထည့်မည်</button>
+            
+            <div id="panelFormContainer" style="display:none; margin-top:15px; background:#1e293b; padding:20px; border-radius:8px;">
+                <h4>Panel အသစ် ပေါင်းထည့်ရန်</h4>
+                <input type="text" id="pName" placeholder="Panel နာမည် (ဥပမာ- SG-Server-01)">
+                <input type="text" id="pUrl" placeholder="Server URL (Port ပါဝင်သော)">
+                <input type="text" id="pSubpath" placeholder="Web Subpath">
+                <input type="text" id="pUser" placeholder="Username">
+                <input type="password" id="pPass" placeholder="Password">
+                <button onclick="saveNewPanel()">ချိတ်ဆက် Save မည်</button>
+            </div>
+
+            <div id="panelsListContainer" style="margin-top: 20px;">
+                <!-- Connected Panels will show here with Online/Offline Status -->
+            </div>
         </div>
 
-        <!-- Free Server Panel -->
-        <div id="freeServer" class="panel-section">
-            <h3>Free Server ဆက်တင်များ (3X-UI ချိတ်ဆက်ရန်)</h3>
-            <input type="text" id="freeUrl" placeholder="Free Server URL">
-            <input type="text" id="freeSubpath" placeholder="Web Subpath">
-            <input type="text" id="freeUser" placeholder="3X-UI Panel Username">
-            <input type="password" id="freePass" placeholder="3X-UI Panel Password">
-            <button onclick="saveConfig('free')">Free Server သိမ်းဆည်းမည်</button>
-        </div>
+        <!-- 3X-UI Manager (Key Generation & Inbounds) -->
+        <div id="manager" class="panel-section">
+            <h3 id="managerTitle">📂 3X-UI Manager (Panel ရွေးချယ်ပါ)</h3>
+            <div id="managerContent" style="display:none;">
+                <input type="text" id="clientEmail" placeholder="Client Email / Name">
+                <input type="text" id="clientGB" placeholder="GB ပမာဏ (ဥပမာ - 30)">
+                <input type="text" id="clientDuration" placeholder="သက်တမ်း (ရက် သို့မဟုတ် လ)">
+                <input type="text" id="clientIPLimit" placeholder="IP Limit (ဥပမာ - 2)">
+                <input type="text" id="clientHWID" placeholder="HWID Limit">
+                
+                <p style="margin-top: 15px; font-weight: bold;">Inbound ရွေးချယ်ရန် (3X-UI Inbounds):</p>
+                <div class="inbound-grid">
+                    <div class="inbound-card selected" onclick="selectInbound(this)">Inbound 1 (VLESS)</div>
+                    <div class="inbound-card" onclick="selectInbound(this)">Inbound 2 (VMess)</div>
+                    <div class="inbound-card" onclick="selectInbound(this)">Inbound 3 (Trojan)</div>
+                    <div class="inbound-card" onclick="selectInbound(this)">Inbound 4 (Shadowsocks)</div>
+                </div>
 
-        <!-- VIP Server Panel -->
-        <div id="vipServer" class="panel-section">
-            <h3>💎 VIP Server ဆက်တင်များနှင့် ချက်ချင်းထုတ်ပေးရန်</h3>
-            <p style="color: #94a3b8; font-size: 13px;">ဤနေရာတွင် VIP ဖိုင်တွဲနှင့် အချက်အလက်များကို Admin သီးသန့် ထိန်းချုပ်နိုင်ပါသည်။</p>
-            <input type="text" id="vipClientName" placeholder="VIP Client Email / Name">
-            <select id="vipDuration">
-                <option value="30">30 Days VIP</option>
-                <option value="60">60 Days VIP</option>
-                <option value="365">1 Year VIP</option>
-            </select>
-            <button onclick="generateVIPKey()">VIP Key တိုက်ရိုက်ထုတ်ပေးမည်</button>
+                <button onclick="generateAdminKey()" style="margin-top: 20px; background: #10b981;">Key အမြန်ထုတ်ယူမည်</button>
+                
+                <div id="adminKeyResult" style="margin-top: 15px; background: #1e293b; padding: 15px; border-radius: 8px; display: none;"></div>
+            </div>
         </div>
     </div>
 
     <script>
+        let loadedPanels = [];
+
         function adminLogin() {
             const email = document.getElementById('adminEmail').value;
             const pass = document.getElementById('adminPass').value;
-            
             if(email === 'hcmtech.mm@gmail.com' && pass === 'Hcmadminpanel@312021') {
                 document.getElementById('loginOverlay').style.display = 'none';
+                loadPanels();
             } else {
                 alert('Email သို့မဟုတ် Password မှားယွင်းနေပါသည်။');
             }
@@ -104,17 +120,92 @@
             event.currentTarget.classList.add('active');
         }
 
-        async function saveConfig(type) {
-            alert(type.toUpperCase() + ' Server ဆက်တင်များ အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ။');
+        function togglePanelForm() {
+            const form = document.getElementById('panelFormContainer');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
 
-        function generateVIPKey() {
-            const name = document.getElementById('vipClientName').value;
-            if(!name) {
-                alert('Client အမည် သို့မဟုတ် Email ထည့်ပါ။');
+        async function saveNewPanel() {
+            const panelName = document.getElementById('pName').value;
+            const url = document.getElementById('pUrl').value;
+            const subpath = document.getElementById('pSubpath').value;
+            const username = document.getElementById('pUser').value;
+            const password = document.getElementById('pPass').value;
+
+            const res = await fetch('/api/save-panel', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ panelName, url, username, password, subpath })
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert('Panel ချိတ်ဆက်မှု အောင်မြင်ပါသည်။');
+                loadedPanels = data.panels;
+                renderPanels();
+                togglePanelForm();
+            }
+        }
+
+        async function loadPanels() {
+            const res = await fetch('/api/panels');
+            const data = await res.json();
+            if(data.success) {
+                loadedPanels = data.panels;
+                renderPanels();
+            }
+        }
+
+        function renderPanels() {
+            const container = document.getElementById('panelsListContainer');
+            container.innerHTML = '<h4>ချိတ်ဆက်ထားသော Panels များ:</h4>';
+            if(loadedPanels.length === 0) {
+                container.innerHTML += '<p style="color: #94a3b8;">လက်လောဆယ် Panel မရှိသေးပါ။</p>';
                 return;
             }
-            alert('VIP Key အောင်မြင်စွာ ထုတ်ပေးပြီးပါပြီ။');
+            loadedPanels.forEach((p, index) => {
+                container.innerHTML += `
+                    <div style="background:#1e293b; padding:15px; margin-top:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <b>${p.panelName}</b> (${p.url})<br>
+                            Status: <span style="color: #4ade80; font-weight:bold;">● ${p.status}</span>
+                        </div>
+                        <div>
+                            <button onclick="openManager('${p.panelName}')" style="background:#0284c7; padding:8px 12px; width:auto; margin:0;">ဝင်မည်</button>
+                            <button onclick="deletePanel(${index})" style="background:#ef4444; padding:8px 12px; width:auto; margin-left:5px;">ဖျက်မည်</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openManager(name) {
+            switchTab('manager');
+            document.getElementById('managerTitle').innerText = `📂 3X-UI Manager - [ ${name} ]`;
+            document.getElementById('managerContent').style.display = 'block';
+        }
+
+        function deletePanel(index) {
+            loadedPanels.splice(index, 1);
+            renderPanels();
+        }
+
+        function selectInbound(el) {
+            document.querySelectorAll('.inbound-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function generateAdminKey() {
+            const email = document.getElementById('clientEmail').value;
+            const gb = document.getElementById('clientGB').value;
+            const resBox = document.getElementById('adminKeyResult');
+            
+            if(!email) {
+                alert('Client Email ထည့်ပါ။');
+                return;
+            }
+
+            resBox.style.display = 'block';
+            resBox.innerHTML = `<b>Key ထုတ်ယူမှု အောင်မြင်ပါသည်!</b><br>Email: ${email} (${gb || 30} GB)<br><br><b>Subscription Info Link:</b><br><input type="text" value="https://hcmteam.com/sub/admin-${Math.random().toString(36.substring(7))}" readonly><br><br><b>Copy URL Key:</b><br><code style="background:#0f172a; padding:5px; display:block;">vless://admin-generated-key-${Math.random().toString(36).substring(7)}@server:443</code>`;
         }
     </script>
 </body>
