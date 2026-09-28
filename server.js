@@ -1,82 +1,224 @@
-const express = require('express');
-const path = require('path');
-const axios = require('axios');
-const app = express();
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <title>HCM Secure Admin Panel</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: #fff; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Login Overlay */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .login-box { background: #1e293b; padding: 35px; border-radius: 12px; width: 350px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .login-box h3 { margin-top: 0; color: #38bdf8; }
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+        /* Sidebar Style */
+        .sidebar { width: 260px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; display: flex; flex-direction: column; }
+        .sidebar h2 { font-size: 16px; margin-bottom: 20px; color: #38bdf8; padding-left: 10px; }
+        .menu-item { padding: 12px 15px; margin-bottom: 6px; cursor: pointer; border-radius: 8px; font-size: 14px; color: #cbd5e1; transition: 0.2s; }
+        .menu-item:hover { background: #334155; color: #fff; }
+        .menu-item.active { background: #0284c7; color: #fff; font-weight: bold; }
+        
+        /* Content Area */
+        .content { flex: 1; padding: 40px; overflow-y: auto; background: #0f172a; }
+        .panel-section { display: none; }
+        .panel-section.active { display: block; }
+        .panel-section h3 { color: #f8fafc; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0; }
+        
+        input, select, button { width: 100%; padding: 12px; margin-top: 12px; border-radius: 6px; border: 1px solid #475569; background: #1e293b; color: #fff; box-sizing: border-box; font-size: 14px; }
+        button { background: #06b6d4; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background: #0891b2; }
 
-// Admin Credentials
-const ADMIN_EMAIL = 'hcmtech.mm@gmail.com';
-const ADMIN_PASS = 'Hcmadminpanel@312021';
+        .inbound-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .inbound-card { background: #1e293b; border: 1px solid #475569; padding: 10px; text-align: center; border-radius: 6px; cursor: pointer; }
+        .inbound-card.selected { border-color: #38bdf8; background: #0284c7; }
+    </style>
+</head>
+<body>
 
-// Database simulation for 3X-UI Panels and Configs
-let panelsList = [];
+    <!-- Admin Login Screen -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h3>🔐 Admin Login</h3>
+            <input type="email" id="adminEmail" placeholder="Email (hcmtech.mm@gmail.com)">
+            <input type="password" id="adminPass" placeholder="Password">
+            <button type="button" onclick="adminLogin()">Login ဝင်မည်</button>
+        </div>
+    </div>
 
-// Routes
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>⚙️ Admin Settings</h2>
+        <div class="menu-item active" onclick="switchTab('dashboard', event)">📊 Dashboard</div>
+        <div class="menu-item" onclick="switchTab('manager', event)">📂 3X-UI Manager</div>
+    </div>
 
-// Hidden Admin Panel Route (No link from main website)
-app.get('/hcm-secure-admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'admin_panel.html'));
-});
+    <!-- Main Content Panels -->
+    <div class="content">
+        <!-- Dashboard & Panel Config -->
+        <div id="dashboard" class="panel-section active">
+            <h3>3X-UI Panels စီမံခန့်ခွဲရန်</h3>
+            <button type="button" onclick="togglePanelForm()" style="background: #10b981; width: auto; padding: 8px 15px;">➕ Panel အသစ်ထည့်မည်</button>
+            
+            <div id="panelFormContainer" style="display:none; margin-top:15px; background:#1e293b; padding:20px; border-radius:8px;">
+                <h4>Panel အသစ် ပေါင်းထည့်ရန်</h4>
+                <input type="text" id="pName" placeholder="Panel နာမည် (ဥပမာ- SG-Server-01)">
+                <input type="text" id="pUrl" placeholder="Server URL (Port ပါဝင်သော)">
+                <input type="text" id="pSubpath" placeholder="Web Subpath">
+                <input type="text" id="pUser" placeholder="Username">
+                <input type="password" id="pPass" placeholder="Password">
+                <button type="button" onclick="saveNewPanel()">ချိတ်ဆက် Save မည်</button>
+            </div>
 
-// Admin Login API
-app.post('/api/admin-login', (req, res) => {
-    const { email, password } = req.body;
-    if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
-        return res.json({ success: true, message: 'Login အောင်မြင်ပါသည်' });
-    } else {
-        return res.json({ success: false, message: 'Email သို့မဟုတ် Password မှားယွင်းနေပါသည်။' });
-    }
-});
+            <div id="panelsListContainer" style="margin-top: 20px;">
+                <!-- Connected Panels will show here with Online/Offline Status -->
+            </div>
+        </div>
 
-// Save or Add 3X-UI Panel
-app.post('/api/save-panel', (req, res) => {
-    const { panelName, url, username, password, subpath } = req.body;
-    panelsList.push({ panelName, url, username, password, subpath, status: 'Online' });
-    res.json({ success: true, message: '3X-UI Panel အောင်မြင်စွာ ချိတ်ဆက်ပြီးပါပြီ', panels: panelsList });
-});
+        <!-- 3X-UI Manager (Key Generation & Inbounds) -->
+        <div id="manager" class="panel-section">
+            <h3 id="managerTitle">📂 3X-UI Manager (Panel ရွေးချယ်ပါ)</h3>
+            <div id="managerContent" style="display:none;">
+                <input type="text" id="clientEmail" placeholder="Client Email / Name">
+                <input type="text" id="clientGB" placeholder="GB ပမာဏ (ဥပမာ - 30)">
+                <input type="text" id="clientDuration" placeholder="သက်တမ်း (ရက် သို့မဟုတ် လ)">
+                <input type="text" id="clientIPLimit" placeholder="IP Limit (ဥပမာ - 2)">
+                <input type="text" id="clientHWID" placeholder="HWID Limit">
+                
+                <p style="margin-top: 15px; font-weight: bold;">Inbound ရွေးချယ်ရန် (3X-UI Inbounds):</p>
+                <div class="inbound-grid">
+                    <div class="inbound-card selected" onclick="selectInbound(this)">Inbound 1 (VLESS)</div>
+                    <div class="inbound-card" onclick="selectInbound(this)">Inbound 2 (VMess)</div>
+                    <div class="inbound-card" onclick="selectInbound(this)">Inbound 3 (Trojan)</div>
+                    <div class="inbound-card" onclick="selectInbound(this)">Inbound 4 (Shadowsocks)</div>
+                </div>
 
-// Get Panels List
-app.get('/api/panels', (req, res) => {
-    res.json({ success: true, panels: panelsList });
-});
+                <button type="button" onclick="generateAdminKey()" style="margin-top: 20px; background: #10b981;">Key အမြန်ထုတ်ယူမည်</button>
+                
+                <div id="adminKeyResult" style="margin-top: 15px; background: #1e293b; padding: 15px; border-radius: 8px; display: none;"></div>
+            </div>
+        </div>
+    </div>
 
-// Free Key Generation (7 Days / 30 GB Limit)
-app.post('/api/generate-free-key', async (req, res) => {
-    const { email } = req.body;
-    res.json({
-        success: true,
-        keyName: email || `FreeUser_${Math.floor(Math.random() * 1000)}`,
-        vlessKey: `vless://free-key-${Math.random().toString(36).substring(7)}@server:443?encryption=none&security=tls#Free-30GB-7Days`,
-        subscriptionUrl: `https://hcmteam.com/sub/free-${Math.random().toString(36).substring(7)}`,
-        limitGB: '30 GB',
-        expireDays: '7 ရက်'
-    });
-});
+    <script>
+        let loadedPanels = [];
 
-// Check GB Status by Email or Key Name
-app.post('/api/check-gb', async (req, res) => {
-    const { query } = req.body;
-    if (!query) {
-        return res.json({ success: false, message: 'ကျေးဇူးပြု၍ Email သို့မဟုတ် Key Name ထည့်ပါ။' });
-    }
+        function adminLogin() {
+            const email = document.getElementById('adminEmail').value;
+            const pass = document.getElementById('adminPass').value;
+            
+            if(email === 'hcmtech.mm@gmail.com' && pass === 'Hcmadminpanel@312021') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                loadPanels();
+            } else {
+                alert('Email သို့မဟုတ် Password မှားယွင်းနေပါသည်။');
+            }
+        }
 
-    res.json({
-        success: true,
-        query: query,
-        totalGB: '30.00 GB',
-        usedGB: '2.50 GB',
-        remainingGB: '27.50 GB',
-        expiryDate: 'ကျန်ရှိရက် - ၆ ရက်'
-    });
-});
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.panel-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if(evt && evt.currentTarget) {
+                evt.currentTarget.classList.add('active');
+            }
+        }
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+        function togglePanelForm() {
+            const form = document.getElementById('panelFormContainer');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function saveNewPanel() {
+            const panelName = document.getElementById('pName').value;
+            const url = document.getElementById('pUrl').value;
+            const subpath = document.getElementById('pSubpath').value;
+            const username = document.getElementById('pUser').value;
+            const password = document.getElementById('pPass').value;
+
+            if(!panelName || !url) {
+                alert('Panel နာမည်နှင့် URL ထည့်ပါ။');
+                return;
+            }
+
+            const res = await fetch('/api/save-panel', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ panelName, url, username, password, subpath })
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert('Panel ချိတ်ဆက်မှု အောင်မြင်ပါသည်။');
+                loadedPanels = data.panels;
+                renderPanels();
+                togglePanelForm();
+            }
+        }
+
+        async function loadPanels() {
+            try {
+                const res = await fetch('/api/panels');
+                const data = await res.json();
+                if(data.success) {
+                    loadedPanels = data.panels;
+                    renderPanels();
+                }
+            } catch(e) {
+                console.log('Error loading panels');
+            }
+        }
+
+        function renderPanels() {
+            const container = document.getElementById('panelsListContainer');
+            container.innerHTML = '<h4>ချိတ်ဆက်ထားသော Panels များ:</h4>';
+            if(loadedPanels.length === 0) {
+                container.innerHTML += '<p style="color: #94a3b8;">လက်ရှိတွင် ချိတ်ဆက်ထားသော Panel မရှိသေးပါ။</p>';
+                return;
+            }
+            loadedPanels.forEach((p, index) => {
+                container.innerHTML += `
+                    <div style="background:#1e293b; padding:15px; margin-top:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <b>${p.panelName}</b> (${p.url})<br>
+                            Status: <span style="color: #4ade80; font-weight:bold;">● ${p.status}</span>
+                        </div>
+                        <div>
+                            <button type="button" onclick="openManager('${p.panelName}')" style="background:#0284c7; padding:8px 12px; width:auto; margin:0;">ဝင်မည်</button>
+                            <button type="button" onclick="deletePanel(${index})" style="background:#ef4444; padding:8px 12px; width:auto; margin-left:5px;">ဖျက်မည်</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openManager(name) {
+            switchTab('manager');
+            document.getElementById('managerTitle').innerText = `📂 3X-UI Manager - [ ${name} ]`;
+            document.getElementById('managerContent').style.display = 'block';
+        }
+
+        function deletePanel(index) {
+            loadedPanels.splice(index, 1);
+            renderPanels();
+        }
+
+        function selectInbound(el) {
+            document.querySelectorAll('.inbound-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function generateAdminKey() {
+            const email = document.getElementById('clientEmail').value;
+            const gb = document.getElementById('clientGB').value;
+            const resBox = document.getElementById('adminKeyResult');
+            
+            if(!email) {
+                alert('Client Email ထည့်ပါ။');
+                return;
+            }
+
+            resBox.style.display = 'block';
+            resBox.innerHTML = `<b>Key ထုတ်ယူမှု အောင်မြင်ပါသည်!</b><br>Email: ${email} (${gb || 30} GB)<br><br><b>Subscription Info Link:</b><br><input type="text" value="https://hcmteam.com/sub/admin-${Math.random().toString(36).substring(7)}" readonly><br><br><b>Copy URL Key:</b><br><code style="background:#0f172a; padding:5px; display:block;">vless://admin-generated-key-${Math.random().toString(36).substring(7)}@server:443</code>`;
+        }
+    </script>
+</body>
+</html>
