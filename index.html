@@ -6,14 +6,15 @@
     <title>MM HCM Team - Premium Fast VPN</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #111827;
-            --accent-blue: #2563eb;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #090d16 50%, #1e1b4b 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover-bg: rgba(255, 255, 255, 0.07);
             --accent-green: #10b981;
+            --accent-blue: #3b82f6;
             --accent-purple: #8b5cf6;
             --text-main: #f9fafb;
             --text-sub: #9ca3af;
-            --border-color: #1f2937;
         }
 
         * {
@@ -24,9 +25,10 @@
 
         body {
             font-family: 'Pyidaungsu', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
-            padding: 20px 16px;
+            padding: 24px 16px 40px 16px;
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -37,16 +39,20 @@
             width: 100%;
         }
 
+        /* Header Section */
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .header h1 {
-            font-size: 22px;
-            color: #60a5fa;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: 0.5px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .header p {
@@ -54,68 +60,84 @@
             font-size: 13px;
         }
 
+        /* Category Section Title */
+        .category-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #93c5fd;
+            margin: 20px 0 10px 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Package Grid */
         .package-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 20px;
         }
 
+        .single-grid {
+            grid-template-columns: 1fr;
+        }
+
+        /* Glassmorphism Card Style */
         .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 14px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
             position: relative;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             user-select: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .card:hover {
-            border-color: #3b82f6;
+        /* 3D Pop / Touch Lift Animation */
+        .card:hover, .card:active {
+            transform: translateY(-6px) scale(1.02);
+            background: var(--glass-hover-bg);
+            border-color: rgba(96, 165, 250, 0.4);
+            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.25);
         }
 
         .card.selected {
             border-color: #10b981;
-            background-color: #131f2e;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+            background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            transform: translateY(-4px) scale(1.02);
         }
 
         .badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 12px;
+            right: 12px;
             font-size: 9px;
             font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 6px;
-            text-transform: uppercase;
-        }
-
-        .badge-green { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-        .badge-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-        .badge-purple { background: rgba(139, 92, 246, 0.2); color: #c084fc; }
-
-        .card-type {
-            font-size: 11px;
-            color: var(--text-sub);
+            padding: 3px 8px;
+            border-radius: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 2px;
         }
 
+        .badge-green { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-blue { background: rgba(59, 130, 246, 0.25); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
         .card-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #fff;
         }
 
         .card-price {
             font-size: 18px;
             font-weight: 800;
-            color: #fff;
+            color: #10b981;
         }
 
         .card-price span {
@@ -124,30 +146,29 @@
             font-weight: normal;
         }
 
-        .card-feature {
-            font-size: 11px;
-            color: #34d399;
-            margin-top: 6px;
-        }
-
+        /* Bottom Fixed Action Panel */
         .order-footer {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            margin-top: 24px;
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
             padding: 16px;
-            border-radius: 14px;
+            border-radius: 18px;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .selected-text {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-sub);
+            letter-spacing: 1px;
             margin-bottom: 4px;
         }
 
         .selected-plan {
             font-size: 15px;
             font-weight: bold;
-            color: #10b981;
+            color: #34d399;
             margin-bottom: 12px;
         }
 
@@ -157,42 +178,77 @@
             justify-content: center;
             gap: 8px;
             width: 100%;
-            background: #229ED9;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
             color: white;
-            padding: 13px 0;
-            border-radius: 10px;
+            padding: 14px 0;
+            border-radius: 12px;
             font-weight: bold;
             font-size: 15px;
             border: none;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
         }
 
         .btn-action:hover {
-            opacity: 0.9;
+            opacity: 0.95;
+            transform: translateY(-1px);
         }
 
+        /* Service Guarantee Section */
         .guarantee-box {
-            margin-top: 18px;
-            padding: 14px;
-            background: rgba(31, 41, 55, 0.4);
-            border-radius: 10px;
-            font-size: 12px;
-            color: var(--text-sub);
-            line-height: 1.6;
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            font-size: 13px;
+            color: #d1d5db;
+            line-height: 1.7;
         }
 
-        .guarantee-box b {
+        .guarantee-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
             color: #f3f4f6;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
 
-        /* Modal Overlay */
+        .guarantee-list {
+            list-style: none;
+            margin-bottom: 14px;
+        }
+
+        .guarantee-list li {
+            margin-bottom: 6px;
+        }
+
+        .responsibility-box {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 12px 14px;
+            border-left: 3px solid #3b82f6;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .responsibility-title {
+            font-weight: bold;
+            color: #60a5fa;
+            margin-bottom: 4px;
+        }
+
+        /* Modal / Payment Popup Overlay */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             z-index: 100;
             justify-content: center;
             align-items: center;
@@ -200,18 +256,18 @@
         }
 
         .modal-card {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 16px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             width: 100%;
             max-width: 420px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            animation: popIn 0.25s ease;
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         @keyframes popIn {
-            from { transform: scale(0.92); opacity: 0; }
+            from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
@@ -219,7 +275,7 @@
             text-align: center;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 1px dashed #374151;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
 
         .modal-header h2 {
@@ -227,19 +283,18 @@
             color: #f3f4f6;
         }
 
-        /* Choice Step Buttons */
         .choice-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .btn-choice {
-            background: #1f2937;
-            border: 1px solid #374151;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
-            padding: 14px;
-            border-radius: 10px;
+            padding: 14px 16px;
+            border-radius: 12px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
@@ -251,10 +306,9 @@
 
         .btn-choice:hover {
             border-color: #3b82f6;
-            background: #2563eb10;
+            background: rgba(59, 130, 246, 0.15);
         }
 
-        /* Payment Tab Section */
         .bank-tabs {
             display: flex;
             gap: 8px;
@@ -264,10 +318,10 @@
         .tab-btn {
             flex: 1;
             padding: 10px;
-            background: #1f2937;
-            border: 1px solid #374151;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #9ca3af;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: bold;
             cursor: pointer;
@@ -286,8 +340,8 @@
         }
 
         .payment-box {
-            background: #1f2937;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
             padding: 14px;
             border-left: 4px solid #3b82f6;
         }
@@ -304,9 +358,9 @@
             align-items: center;
             justify-content: space-between;
             margin-top: 8px;
-            background: #111827;
+            background: rgba(0, 0, 0, 0.3);
             padding: 8px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .phone-num {
@@ -317,24 +371,24 @@
         }
 
         .btn-copy {
-            background: #374151;
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
             border: none;
             padding: 6px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
         }
 
         .notice-box {
             background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 8px;
-            padding: 10px 12px;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 10px;
+            padding: 12px;
             margin-top: 14px;
             font-size: 11px;
             color: #fca5a5;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .btn-telegram {
@@ -362,7 +416,7 @@
             padding: 8px;
             font-size: 12px;
             cursor: pointer;
-            margin-top: 6px;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -371,82 +425,86 @@
 <div class="container">
     <div class="header">
         <h1>MM HCM Team VPN</h1>
-        <p>High-Speed & VIP Premium Packages</p>
+        <p>High-Speed Premium Packages</p>
     </div>
 
-    <!-- Package List Grid -->
+    <!-- 1. Unlimited Packages -->
+    <div class="category-title">💎 Unlimited Packages</div>
+    <div class="package-grid single-grid">
+        <div class="card" onclick="selectPackage(this, '30 Days Unlimited', '7,000 MMK')">
+            <span class="badge badge-green">UNLIMITED</span>
+            <div class="card-title">30 Days Unl.</div>
+            <div class="card-price">7,000 <span>MMK</span></div>
+        </div>
+    </div>
+
+    <!-- 2. No Expire Packages -->
+    <div class="category-title">📦 No Expire Packages</div>
     <div class="package-grid">
-
-        <div class="card" onclick="selectPackage(this, 'Max Unlimited', '7,000 Ks')">
-            <span class="badge badge-green">BEST VALUE</span>
-            <div class="card-type">UNLIMITED</div>
-            <div class="card-title">Max Unlimited</div>
-            <div class="card-price">7K <span>/ 7,000 Ks</span></div>
-            <div class="card-feature">✓ Unlimited Bandwidth</div>
+        <div class="card" onclick="selectPackage(this, '100 GB (No Expire)', '5,000 MMK')">
+            <div class="card-title">100 GB</div>
+            <div class="card-price">5,000 <span>MMK</span></div>
         </div>
-
-        <div class="card" onclick="selectPackage(this, 'Data Pack Pro (No Expire)', '12,000 Ks')">
+        <div class="card" onclick="selectPackage(this, '300 GB (No Expire)', '12,000 MMK')">
             <span class="badge badge-blue">POPULAR</span>
-            <div class="card-type">NO EXPIRE</div>
-            <div class="card-title">Data Pack Pro</div>
-            <div class="card-price">12K <span>/ 12,000 Ks</span></div>
-            <div class="card-feature">✓ High Data Volume</div>
+            <div class="card-title">300 GB</div>
+            <div class="card-price">12,000 <span>MMK</span></div>
         </div>
-
-        <div class="card selected" onclick="selectPackage(this, 'Data Pack Lite (No Expire)', '5,000 Ks')">
-            <div class="card-type">NO EXPIRE</div>
-            <div class="card-title">Data Pack Lite</div>
-            <div class="card-price">5K <span>/ 5,000 Ks</span></div>
-            <div class="card-feature">✓ Flexible Usage</div>
-        </div>
-
-        <div class="card" onclick="selectPackage(this, 'Monthly Pro (30 Days)', '14,000 Ks')">
-            <span class="badge badge-purple">MAX SPEED</span>
-            <div class="card-type">30 DAYS</div>
-            <div class="card-title">Monthly Pro</div>
-            <div class="card-price">14K <span>/ 14,000 Ks</span></div>
-            <div class="card-feature">✓ VIP Speed Turbo</div>
-        </div>
-
-        <div class="card" onclick="selectPackage(this, 'Monthly Std (30 Days)', '7,000 Ks')">
-            <div class="card-type">30 DAYS</div>
-            <div class="card-title">Monthly Std</div>
-            <div class="card-price">7K <span>/ 7,000 Ks</span></div>
-            <div class="card-feature">✓ Standard Speed</div>
-        </div>
-
-        <div class="card" onclick="selectPackage(this, 'Monthly Saver (30 Days)', '3,000 Ks')">
-            <div class="card-type">30 DAYS</div>
-            <div class="card-title">Monthly Saver</div>
-            <div class="card-price">3K <span>/ 3,000 Ks</span></div>
-            <div class="card-feature">✓ Economy Speed</div>
-        </div>
-
-        <div class="card" onclick="selectPackage(this, 'Starter Pack (15 Days)', '1,500 Ks')">
-            <span class="badge badge-blue">STARTER</span>
-            <div class="card-type">15 DAYS</div>
-            <div class="card-title">Starter Pack</div>
-            <div class="card-price">1.5K <span>/ 1,500 Ks</span></div>
-            <div class="card-feature">✓ Trial Speed</div>
-        </div>
-
     </div>
 
-    <!-- Selected Info & Action Button -->
+    <!-- 3. 30 Days Packages -->
+    <div class="category-title">⏳ 30 Days Packages</div>
+    <div class="package-grid">
+        <div class="card selected" onclick="selectPackage(this, '100 GB (30 Days)', '3,000 MMK')">
+            <div class="card-title">100 GB</div>
+            <div class="card-price">3,000 <span>MMK</span></div>
+        </div>
+        <div class="card" onclick="selectPackage(this, '300 GB (30 Days)', '7,000 MMK')">
+            <div class="card-title">300 GB</div>
+            <div class="card-price">7,000 <span>MMK</span></div>
+        </div>
+        <div class="card" onclick="selectPackage(this, '500 GB (30 Days)', '14,000 MMK')">
+            <span class="badge badge-blue">MAX DATA</span>
+            <div class="card-title">500 GB</div>
+            <div class="card-price">14,000 <span>MMK</span></div>
+        </div>
+    </div>
+
+    <!-- 4. 15 Days Packages -->
+    <div class="category-title">⏳ 15 Days Packages</div>
+    <div class="package-grid single-grid">
+        <div class="card" onclick="selectPackage(this, '50 GB (15 Days)', '1,500 MMK')">
+            <div class="card-title">50 GB</div>
+            <div class="card-price">1,500 <span>MMK</span></div>
+        </div>
+    </div>
+
+    <!-- Order Action Panel -->
     <div class="order-footer">
         <div class="selected-text">SELECTED PACKAGE</div>
-        <div id="selected-plan" class="selected-plan">Data Pack Lite (No Expire) • 5,000 Ks</div>
+        <div id="selected-plan" class="selected-plan">100 GB (30 Days) • 3,000 MMK</div>
         
         <button onclick="openModal()" class="btn-action">
-             Telegram Software ထဲ တိုက်ရိုက်သွားမည်
+            Telegram Software ထဲ တိုက်ရိုက်သွားမည်
         </button>
     </div>
 
+    <!-- Guarantees & Terms Section -->
     <div class="guarantee-box">
-        <b>🛡️ ဝန်ဆောင်မှု အာမခံချက်များ:</b><br>
-        • IP Speed လျော့ခံရခြင်း လုံးဝ မရှိပါ။<br>
-        • Key IP Ban ခံရခြင်း မရှိပါ။<br>
-        • Error ဖြစ်ပါက Key အသစ် အမြန်ဆုံး လဲလှယ်ပေးပါသည်။
+        <div class="guarantee-title">🛡️ ဝန်ဆောင်မှု အာမခံချက်များ 🛡️</div>
+        <p style="margin-bottom: 8px; font-size: 12px; color: #9ca3af; text-align: center;">
+            ကျွန်ုပ်တို့၏ Key အသုံးပြုသူများအတွက် အောက်ပါတို့ကို အပြည့်အဝ တာဝန်ယူပါသည်။
+        </p>
+        <ul class="guarantee-list">
+            <li>✅ IP Speed လျော့ခံရခြင်းမျိုး မရှိစေရပါ။</li>
+            <li>✅ Key IP Ban ခံရခြင်းမျိုး လုံးဝမဖြစ်စေရပါ။</li>
+            <li>✅ အသုံးပြုရ အဆင်ပြေချောမွေ့မှုရှိစေရမည်။</li>
+        </ul>
+
+        <div class="responsibility-box">
+            <div class="responsibility-title">⚙️ ကျွန်ုပ်တို့၏ တာဝန်ယူမှု</div>
+            သက်တမ်း (သို့) GB မကုန်ဆုံးခင်အထိ - မည်သည့် Error တစ်ခုခု ဖြစ်ပေါ်ပါက ကျွန်ုပ်တို့မှ ချက်ချင်းတာဝန်ယူ ဖြေရှင်းပေးပါမည်။ ဖြေရှင်းမရပါက Key အသစ်ဖြင့် လဲလှယ်ပေးသွားမှာ ဖြစ်လို့ စိတ်ချလက်ချ အသုံးပြုနိုင်ပါတယ်ခင်ဗျာ။
+        </div>
     </div>
 </div>
 
@@ -454,12 +512,12 @@
 <div id="payment-modal" class="modal-overlay">
     <div class="modal-card">
         
-        <!-- STEP 1: Choose Method -->
+        <!-- STEP 1: Choice -->
         <div id="step-choice">
             <div class="modal-header">
                 <h2>ငွေပေးချေမှု နည်းလမ်း ရွေးချယ်ပါ</h2>
                 <div id="modal-plan-title" style="font-size: 12px; color: #10b981; margin-top: 4px;">
-                    Plan: Data Pack Lite (5,000 Ks)
+                    Plan: 100 GB (30 Days) - 3,000 MMK
                 </div>
             </div>
 
@@ -478,19 +536,17 @@
             <button onclick="closeModal()" class="btn-back">✕ ပိတ်မည်</button>
         </div>
 
-        <!-- STEP 2: Direct Payment Accounts -->
+        <!-- STEP 2: Direct Pay -->
         <div id="step-pay" style="display: none;">
             <div class="modal-header">
                 <h2>✨ PAYMENT DETAILS ✨</h2>
             </div>
 
-            <!-- Bank Tabs -->
             <div class="bank-tabs">
                 <button id="tab-kbz" class="tab-btn active-kbz" onclick="switchBank('kbz')">🏦 KBZ Pay</button>
                 <button id="tab-wave" class="tab-btn" onclick="switchBank('wave')">🏦 Wave Money</button>
             </div>
 
-            <!-- KBZ Details -->
             <div id="bank-kbz-info" class="payment-box">
                 <div style="font-size: 12px; color: #60a5fa; font-weight: bold;">KBZ Pay Account</div>
                 <div class="account-name">👤 Hein Htet Aung</div>
@@ -500,7 +556,6 @@
                 </div>
             </div>
 
-            <!-- Wave Details -->
             <div id="bank-wave-info" class="payment-box" style="display: none; border-left-color: #f59e0b;">
                 <div style="font-size: 12px; color: #fcd34d; font-weight: bold;">Wave Money Account</div>
                 <div class="account-name">👤 Hein Htet Aung</div>
@@ -527,9 +582,9 @@
 </div>
 
 <script>
-    let currentPlanName = "Data Pack Lite (No Expire)";
-    let currentPlanPrice = "5,000 Ks";
-    const telegramUsername = "akuma_edu"; // သင်၏ Telegram Username ထည့်ရန်
+    let currentPlanName = "100 GB (30 Days)";
+    let currentPlanPrice = "3,000 MMK";
+    const telegramUsername = "akuma_edu";
 
     function selectPackage(element, name, price) {
         const cards = document.querySelectorAll('.card');
@@ -589,7 +644,7 @@
         btn.style.background = "#10b981";
         setTimeout(() => {
             btn.innerText = "Copy";
-            btn.style.background = "#374151";
+            btn.style.background = "rgba(255, 255, 255, 0.1)";
         }, 2000);
     }
 
