@@ -2,231 +2,88 @@
 <html lang="my">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP VPN STORE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
+    <title>HCM Team - User Portal</title>
     <style>
-        * { font-family: 'Pyidaungsu', sans-serif !important; font-style: normal !important; }
-        body { background-color: #080d1a; color: #f8fafc; }
-        .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glow-cyan { box-shadow: 0 0 30px rgba(6, 182, 212, 0.15); }
+        body { font-family: sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        h2 { text-align: center; color: #38bdf8; margin-bottom: 25px; }
+        .section { margin-bottom: 20px; padding: 20px; background: #334155; border-radius: 10px; }
+        .section h3 { margin-top: 0; font-size: 16px; color: #f8fafc; }
+        input, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 6px; border: none; box-sizing: border-box; font-size: 14px; }
+        input { background: #1e293b; color: #fff; border: 1px solid #475569; }
+        button { background: #06b6d4; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0891b2; }
+        .result-box { margin-top: 12px; padding: 12px; background: #1e293b; border-radius: 6px; font-size: 14px; border-left: 4px solid #38bdf8; word-break: break-all; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
-
-    <!-- Navbar -->
-    <header class="p-4 border-b border-slate-800/80 glass sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center gap-2">
-                <i class="fa-solid fa-shield-halved text-cyan-400"></i> VIP VPN STORE
-            </h1>
-            <div class="flex gap-2">
-                <a href="https://t.me/your_telegram_username" target="_blank" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-cyan-500/20">
-                    <i class="fa-brands fa-telegram text-base"></i> Order တင်ရန်
-                </a>
-                <a href="admin.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-xs border border-slate-700 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-lock text-cyan-400"></i> Admin Panel
-                </a>
-            </div>
+<body>
+    <div class="container">
+        <h2>🌐 HCM Free Proxy Portal</h2>
+        
+        <!-- Check GB Status Section -->
+        <div class="section">
+            <h3>📊 အသုံးြုပုထားသော အကောင့် လက်ကျန် GB စစ်ဆေးရန်</h3>
+            <input type="text" id="queryInput" placeholder="မိမိ၏ Email သို့မဟုတ် Key Name ရိုက်ထည့်ပါ...">
+            <button onclick="checkGB()">လက်ကျန် စစ်ဆေးမည်</button>
+            <div id="checkResult" class="result-box" style="display: none;"></div>
         </div>
-    </header>
 
-    <main class="max-w-5xl mx-auto p-4 space-y-10 my-4 w-full">
+        <!-- Free Server Section (7 Days / 30 GB) -->
+        <div class="section">
+            <h3>🎁 Free Server (အခမဲ့ Key ကိုယ်တိုင်ထုတ်ယူရန်)</h3>
+            <p style="font-size: 13px; color: #94a3b8;">စည်းကမ်းချက် - တစ်ခါထုတ်လျှင် <b>ရက် ၇ ရက်</b> နှင့် <b>30 GB</b> တိတိ ရရှိမည်ဖြစ်ပါသည်။</p>
+            <input type="text" id="userEmailInput" placeholder="သင့်၏ Email (သို့) အမည်ထည့်ပါ...">
+            <button onclick="generateFreeKey()">Free Key ထုတ်မည် (7 Days / 30 GB)</button>
+            <div id="keyResult" class="result-box" style="display: none; color: #38bdf8;"></div>
+        </div>
 
-        <!-- Banner & Order CTA -->
-        <section class="text-center space-y-4 py-6 relative">
-            <div class="absolute inset-0 bg-cyan-500/10 blur-3xl rounded-full -z-10"></div>
-            <h2 class="text-3xl md:text-5xl font-extrabold text-white tracking-wide">
-                မြန်ဆန်စိတ်ချရသော <span class="text-cyan-400">VIP VPN</span> ဝန်ဆောင်မှု
-            </h2>
-            <p class="text-slate-400 text-xs md:text-sm max-w-xl mx-auto">
-                Free Keys များ၏ လက်ကျန် GB ကို Live စစ်ဆေးနိုင်သလို မိမိဝယ်ယူထားသော VIP Key များ၏ Data သုံးစွဲမှုကိုလည်း အောက်တွင် ချက်ချင်း စစ်ဆေးနိုင်ပါသည်။
-            </p>
-            <div class="pt-2">
-                <a href="https://t.me/your_telegram_username" target="_blank" class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition shadow-xl shadow-cyan-500/25">
-                    <i class="fa-solid fa-cart-shopping"></i> VPN Key တိုက်ရိုက် ဝယ်ယူရန် (Telegram)
-                </a>
-            </div>
-        </section>
-
-        <!-- User Data Checker Section -->
-        <section class="glass p-6 rounded-3xl glow-cyan max-w-2xl mx-auto space-y-4 border border-cyan-500/20">
-            <h3 class="text-lg font-bold text-cyan-400 flex items-center gap-2">
-                <i class="fa-solid fa-magnifying-glass"></i> ဝယ်ယူထားသော အကောင့် လက်ကျန် GB စစ်ဆေးရန်
-            </h3>
-            <div class="flex flex-col sm:flex-row gap-2">
-                <input type="text" id="searchClientInput" placeholder="မိမိ၏ Email သို့မဟုတ် Key Name ရိုက်ထည့်ပါ..." 
-                    class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 transition">
-                <button onclick="checkClientData()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm transition flex items-center justify-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-search"></i> စစ်ဆေးမည်
-                </button>
-            </div>
-            
-            <!-- Result Box -->
-            <div id="checkResult" class="hidden mt-4 p-4 rounded-2xl border border-slate-800 bg-slate-900/90 space-y-3 text-sm"></div>
-        </section>
-
-        <!-- Free Keys Live Status Section -->
-        <section class="space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
-                    <i class="fa-solid fa-gift"></i> Free Keys (Live GB Status)
-                </h3>
-                <button onclick="loadFreeKeys()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">
-                    <i class="fa-solid fa-rotate-right"></i> Refresh
-                </button>
-            </div>
-
-            <div id="freeKeysContainer" class="grid sm:grid-cols-2 gap-4">
-                <div class="glass p-6 rounded-2xl text-center text-slate-400 text-sm col-span-2">Free Keys များကို ရယူနေပါသည်...</div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="p-6 text-center text-slate-500 text-xs border-t border-slate-800/80">
-        &copy; 2026 VIP VPN STORE. All rights reserved.
-    </footer>
+        <!-- VIP Server Notice -->
+        <div class="section" style="background: #1e293b; border: 1px dashed #f59e0b;">
+            <h3 style="color: #f59e0b;">💎 VIP Server</h3>
+            <p style="font-size: 13px; margin: 0;">VIP Server များ ဝယ်ယူလိုပါက အဓိက Admin ထံသို့ တိုက်ရိုက်ဆက်သွယ်၍ ဝယ်ယူနိုင်ပါသည်။ (ဤနေရာတွင် အလိုအလျောက် ထုတ်ယူ၍မရပါ)</p>
+        </div>
+    </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            loadFreeKeys();
-        });
-
-        function getBackendConfig() {
-            const config = localStorage.getItem("vpn_config");
-            return config ? JSON.parse(config) : null;
-        }
-
-        async function fetchViaBackend(server, email) {
-            try {
-                const res = await fetch('/api/check-client', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        serverUrl: server.url,
-                        subpath: server.subpath,
-                        username: server.username,
-                        password: server.password,
-                        email: email
-                    })
-                });
-                const data = await res.json();
-                return data.success ? data.data : null;
-            } catch (err) {
-                console.error("Backend Error:", err);
-                return null;
-            }
-        }
-
-        async function checkClientData() {
-            const email = document.getElementById("searchClientInput").value.trim();
-            const resultBox = document.getElementById("checkResult");
-            if (!email) return alert("Email သို့မဟုတ် Key Name ရိုက်ထည့်ပါ!");
-
-            resultBox.classList.remove("hidden");
-            resultBox.innerHTML = `<p class="text-slate-400"><i class="fa-solid fa-spinner fa-spin text-cyan-400 mr-2"></i> Server များတွင် စစ်ဆေးနေပါသည်...</p>`;
-
-            const config = getBackendConfig();
-            if (!config || !config.servers) {
-                resultBox.innerHTML = `<p class="text-red-400">Admin Panel တွင် Server အချက်အလက်များ မပြင်ဆင်ရသေးပါ။</p>`;
+        async function checkGB() {
+            const query = document.getElementById('queryInput').value;
+            const resultBox = document.getElementById('checkResult');
+            if(!query) {
+                alert('ကျေးဇူးပြု၍ Email သို့မဟုတ် Key Name ထည့်ပါ။');
                 return;
             }
 
-            let foundData = null;
-            let foundServerName = "";
-
-            for (let server of config.servers) {
-                if (!server.url) continue;
-                const clientData = await fetchViaBackend(server, email);
-                if (clientData) {
-                    foundData = clientData;
-                    foundServerName = server.name;
-                    break;
-                }
-            }
-
-            if (foundData) {
-                resultBox.innerHTML = `
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="font-bold text-cyan-400 flex items-center gap-1.5"><i class="fa-solid fa-user-check"></i> ${foundData.email}</span>
-                            <span class="text-xs px-2.5 py-1 rounded-md ${foundData.enable ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400'}">${foundData.enable ? 'Active' : 'Disabled'}</span>
-                        </div>
-                        <p class="text-xs text-slate-400">ချိတ်ဆက်ထားသော Server: <span class="text-slate-200 font-bold">${foundServerName}</span></p>
-                        <div class="grid grid-cols-3 gap-2 text-center text-xs pt-1">
-                            <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50">
-                                <span class="block text-slate-400 mb-1">သုံးပြီးသမျှ</span>
-                                <span class="font-bold text-slate-100 text-sm">${foundData.usedGB} GB</span>
-                            </div>
-                            <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50">
-                                <span class="block text-slate-400 mb-1">ကျန်ရှိ GB</span>
-                                <span class="font-bold text-emerald-400 text-sm">${foundData.remainingGB} ${foundData.remainingGB !== 'Unlimited' ? 'GB' : ''}</span>
-                            </div>
-                            <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50">
-                                <span class="block text-slate-400 mb-1">သက်တမ်းကုန်ရက်</span>
-                                <span class="font-bold text-cyan-400 text-sm">${foundData.expiry}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
+            const response = await fetch('/api/check-gb', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
+            const data = await response.json();
+            
+            resultBox.style.display = 'block';
+            if(data.success) {
+                resultBox.innerHTML = `<b>အမည်/Email:</b> ${data.query}<br><b>စုစုပေါင်း:</b> ${data.totalGB}<br><b>သုံးပြီးသည်:</b> ${data.usedGB}<br><b>ကျန်ရှိသည်:</b> <span style="color: #4ade80;">${data.remainingGB}</span><br><b>သက်တမ်း:</b> ${data.expiryDate}`;
             } else {
-                resultBox.innerHTML = `<p class="text-red-400 text-xs"><i class="fa-solid fa-circle-exclamation mr-1"></i> အကောင့် ရှာမတွေ့ပါ သို့မဟုတ် Server ချိတ်ဆက်၍ မရပါ။</p>`;
+                resultBox.innerHTML = `<span style="color: #f87171;">${data.message}</span>`;
             }
         }
 
-        async function loadFreeKeys() {
-            const container = document.getElementById("freeKeysContainer");
-            const config = getBackendConfig();
+        async function generateFreeKey() {
+            const email = document.getElementById('userEmailInput').value;
+            const keyResultBox = document.getElementById('keyResult');
+            
+            const response = await fetch('/api/generate-free-key', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
 
-            if (!config || !config.freeKeys || config.freeKeys.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-2 glass p-6 rounded-2xl text-center text-slate-400 text-xs border border-slate-800">
-                        လက်ရှိတွင် Free Key များ မထည့်သွင်းရသေးပါ။ (Admin Panel မှ ထည့်သွင်းနိုင်ပါသည်။)
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = "";
-            for (let keyItem of config.freeKeys) {
-                const server = (config.servers || []).find(s => s.id === keyItem.serverId);
-                let liveData = null;
-                if (server) {
-                    liveData = await fetchViaBackend(server, keyItem.email);
-                }
-
-                const usedGB = liveData ? parseFloat(liveData.usedGB) : 0;
-                const totalGB = liveData && liveData.totalGB !== "Unlimited" ? parseFloat(liveData.totalGB) : 100;
-                const remainingGB = liveData ? liveData.remainingGB : (totalGB - usedGB).toFixed(2);
-                const percent = Math.min(100, Math.max(0, (usedGB / totalGB) * 100)).toFixed(1);
-
-                container.innerHTML += `
-                    <div class="glass p-5 rounded-2xl space-y-3 border border-emerald-500/20 relative">
-                        <div class="flex justify-between items-start gap-2">
-                            <div>
-                                <h4 class="font-bold text-sm text-slate-100">${keyItem.label || keyItem.email}</h4>
-                                <span class="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5"><i class="fa-solid fa-circle text-[8px] animate-pulse"></i> Live Online</span>
-                            </div>
-                            <button onclick="navigator.clipboard.writeText('${keyItem.vlessConfig || keyItem.email}'); alert('Key ကို Copy ကူးပြီးပါပြီ!')" 
-                                class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1 shrink-0">
-                                <i class="fa-solid fa-copy"></i> Copy Key
-                            </button>
-                        </div>
-
-                        <div class="space-y-1.5 pt-1">
-                            <div class="flex justify-between text-xs text-slate-400">
-                                <span>သုံးပြီး: ${usedGB} GB</span>
-                                <span>ကျန်: <strong class="text-emerald-400">${remainingGB} GB</strong> / ${totalGB} GB</span>
-                            </div>
-                            <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
-                                <div class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+            keyResultBox.style.display = 'block';
+            if(data.success) {
+                keyResultBox.innerHTML = `<b>အောင်မြင်ပါသည်!</b><br>Key Name: ${data.keyName}<br>သက်တမ်း: ${data.expireDays} | GB: ${data.limitGB}<br><br><b>Your Key:</b><br><code style="background:#0f172a; padding:5px; display:block; margin-top:5px;">${data.vlessKey}</code>`;
+            } else {
+                keyResultBox.innerHTML = `<span style="color: #f87171;">ထုတ်ယူမှု မအောင်မြင်ပါ။</span>`;
             }
         }
     </script>
