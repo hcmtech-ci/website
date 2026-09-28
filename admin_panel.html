@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Padauk', sans-serif; background: #020617; color: #f8fafc; }
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="p-4 md:p-8 max-w-4xl mx-auto space-y-8">
+
+    <!-- Title Header -->
+    <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+        <div>
+            <h1 class="text-2xl font-bold text-blue-400 flex items-center gap-2">
+                <i class="fa-solid fa-sliders"></i> VPN Admin Panel
+            </h1>
+            <p class="text-xs text-slate-400">3X-UI Server API များနှင့် Free Key များကို စီမံခန့်ခွဲရန် စာမျက်နှာ</p>
+        </div>
+        <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-4 py-2 rounded-xl border border-slate-700 transition">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Website သို့
+        </a>
+    </div>
+
+    <!-- Section 1: Server Configurations (US, SG, Free Server) -->
+    <section class="glass p-6 rounded-2xl space-y-6">
+        <h2 class="text-lg font-bold text-indigo-400 flex items-center gap-2">
+            <i class="fa-solid fa-server"></i> 3X-UI Servers (API Settings)
+        </h2>
+
+        <div id="serversList" class="space-y-6">
+            <!-- Dynamically Rendered Servers -->
+        </div>
+    </section>
+
+    <!-- Section 2: Free Keys Management -->
+    <section class="glass p-6 rounded-2xl space-y-4">
+        <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
+                <i class="fa-solid fa-key"></i> Free Keys စီမံရန်
+            </h2>
+            <button onclick="addFreeKeyRow()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition">
+                + Free Key အသစ်ထည့်ရန်
+            </button>
+        </div>
+
+        <div id="freeKeysList" class="space-y-3">
+            <!-- Dynamically Rendered Free Keys -->
+        </div>
+    </section>
+
+    <!-- Save Button -->
+    <div class="text-right">
+        <button onclick="saveAllSettings()" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-600/30">
+            <i class="fa-solid fa-floppy-disk mr-2"></i> သိမ်းဆည်းမည် (Save Changes)
+        </button>
+    </div>
+
+    <script>
+        const defaultServers = [
+            { id: "us", name: "US Server", url: "", subpath: "", username: "", password: "" },
+            { id: "sg", name: "SG Server", url: "", subpath: "", username: "", password: "" },
+            { id: "free", name: "Free Server", url: "", subpath: "", username: "", password: "" }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadAdminData();
+        });
+
+        function loadAdminData() {
+            const stored = localStorage.getItem("vpn_config");
+            const config = stored ? JSON.parse(stored) : { servers: defaultServers, freeKeys: [] };
+
+            renderServers(config.servers || defaultServers);
+            renderFreeKeys(config.freeKeys || [], config.servers || defaultServers);
+        }
+
+        function renderServers(servers) {
+            const container = document.getElementById("serversList");
+            container.innerHTML = "";
+
+            servers.forEach((s, idx) => {
+                container.innerHTML += `
+                    <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/50 space-y-3">
+                        <h3 class="font-bold text-slate-200 border-b border-slate-800 pb-2">${s.name}</h3>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <input type="text" id="srv_url_${idx}" value="${s.url}" placeholder="Server URL (ဥပမာ: http://1.2.3.4:2053)" class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+                            <input type="text" id="srv_subpath_${idx}" value="${s.subpath || ''}" placeholder="Web Subpath (ဥပမာ: /3xui သို့မဟုတျ လှတျထားပါ)" class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+                            <input type="text" id="srv_user_${idx}" value="${s.username}" placeholder="Panel Username" class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+                            <input type="password" id="srv_pass_${idx}" value="${s.password}" placeholder="Panel Password" class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFreeKeys(keys, servers) {
+            const container = document.getElementById("freeKeysList");
+            container.innerHTML = "";
+
+            if (keys.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-2">Free Key မရှိသေးပါ။ အပေါ်မှ ခလုတ်ကို နှိပ်၍ ထည့်ပါ။</p>`;
+                return;
+            }
+
+            keys.forEach((k, idx) => {
+                let options = servers.map(s => `<option value="${s.id}" ${s.id === k.serverId ? 'selected' : ''}>${s.name}</option>`).join('');
+                container.innerHTML += `
+                    <div class="flex flex-col md:flex-row gap-2 p-3 bg-slate-900/80 rounded-xl border border-slate-800 items-center">
+                        <select id="key_srv_${idx}" class="bg-slate-900 border border-slate-700 text-xs p-2 rounded-lg text-slate-200 w-full md:w-auto">
+                            ${options}
+                        </select>
+                        <input type="text" id="key_label_${idx}" value="${k.label || ''}" placeholder="Title Label (ဥပမာ: Free Key 1)" class="bg-slate-900 border border-slate-700 text-xs p-2 rounded-lg text-slate-200 w-full md:w-auto">
+                        <input type="text" id="key_email_${idx}" value="${k.email}" placeholder="3X-UI ထဲမှ Key Email / Remark" class="bg-slate-900 border border-slate-700 text-xs p-2 rounded-lg text-slate-200 flex-1">
+                        <input type="text" id="key_vless_${idx}" value="${k.vlessConfig || ''}" placeholder="VLESS / Vmess Config String" class="bg-slate-900 border border-slate-700 text-xs p-2 rounded-lg text-slate-200 flex-1">
+                        <button onclick="removeFreeKeyRow(${idx})" class="text-red-400 hover:text-red-300 p-2"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function addFreeKeyRow() {
+            const stored = localStorage.getItem("vpn_config");
+            const config = stored ? JSON.parse(stored) : { servers: defaultServers, freeKeys: [] };
+            config.freeKeys.push({ serverId: "free", label: "Free Key New", email: "", vlessConfig: "" });
+            localStorage.setItem("vpn_config", JSON.stringify(config));
+            loadAdminData();
+        }
+
+        function removeFreeKeyRow(index) {
+            const stored = localStorage.getItem("vpn_config");
+            if (!stored) return;
+            const config = JSON.parse(stored);
+            config.freeKeys.splice(index, 1);
+            localStorage.setItem("vpn_config", JSON.stringify(config));
+            loadAdminData();
+        }
+
+        function saveAllSettings() {
+            const stored = localStorage.getItem("vpn_config");
+            const existing = stored ? JSON.parse(stored) : { servers: defaultServers, freeKeys: [] };
+
+            // Read Servers
+            const updatedServers = defaultServers.map((s, idx) => ({
+                ...s,
+                url: document.getElementById(`srv_url_${idx}`).value.trim(),
+                subpath: document.getElementById(`srv_subpath_${idx}`).value.trim(),
+                username: document.getElementById(`srv_user_${idx}`).value.trim(),
+                password: document.getElementById(`srv_pass_${idx}`).value.trim()
+            }));
+
+            // Read Free Keys
+            const updatedKeys = (existing.freeKeys || []).map((k, idx) => ({
+                serverId: document.getElementById(`key_srv_${idx}`).value,
+                label: document.getElementById(`key_label_${idx}`).value.trim(),
+                email: document.getElementById(`key_email_${idx}`).value.trim(),
+                vlessConfig: document.getElementById(`key_vless_${idx}`).value.trim()
+            }));
+
+            const newConfig = { servers: updatedServers, freeKeys: updatedKeys };
+            localStorage.setItem("vpn_config", JSON.stringify(newConfig));
+            alert("အချက်အလက်များကို အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ!");
+        }
+    </script>
+</body>
+</html>
