@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Pyidaungsu', sans-serif !important; font-style: normal !important; }
+        body { background-color: #030712; color: #f8fafc; }
+        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- LOGIN FORM -->
+    <div id="loginBox" class="glass p-8 rounded-3xl max-w-md w-full space-y-6 border border-cyan-500/20 shadow-2xl">
+        <div class="text-center space-y-2">
+            <div class="w-14 h-14 bg-cyan-500/10 text-cyan-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-cyan-500/20">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-white">Admin Panel Login</h1>
+            <p class="text-xs text-slate-400">စီမံခန့်ခွဲသူ အကောင့်ဖြင့် ဝင်ရောက်ပါ</p>
+        </div>
+
+        <form onsubmit="handleLogin(event)" class="space-y-4">
+            <div class="space-y-1">
+                <label class="text-xs text-slate-300">Email</label>
+                <input type="email" id="adminEmail" required placeholder="Email ရိုက်ထည့်ပါ" 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+            </div>
+            <div class="space-y-1">
+                <label class="text-xs text-slate-300">Password</label>
+                <input type="password" id="adminPassword" required placeholder="Password ရိုက်ထည့်ပါ" 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+            </div>
+            <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-cyan-500/20">
+                Login ဝင်မည်
+            </button>
+        </form>
+    </div>
+
+    <!-- MAIN ADMIN PANEL -->
+    <div id="adminContent" class="hidden w-full max-w-4xl mx-auto space-y-6 py-6">
+
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-cyan-400 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders"></i> VPN Admin Panel
+                </h1>
+                <p class="text-xs text-slate-400">3X-UI Servers & Free Keys Management</p>
+            </div>
+            <div class="flex gap-2">
+                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3.5 py-2 rounded-xl border border-slate-700 transition">
+                    Website သို့
+                </a>
+                <button onclick="logout()" class="bg-red-500/20 text-red-400 hover:bg-red-500/30 text-xs px-3.5 py-2 rounded-xl border border-red-500/30 transition">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Servers Management -->
+        <section class="glass p-6 rounded-3xl space-y-4 border border-cyan-500/20">
+            <h2 class="text-base font-bold text-cyan-400 flex items-center gap-2">
+                <i class="fa-solid fa-server"></i> 3X-UI Servers (API Configuration)
+            </h2>
+            <div id="serversList" class="space-y-4"></div>
+        </section>
+
+        <!-- Free Keys Management -->
+        <section class="glass p-6 rounded-3xl space-y-4 border border-emerald-500/20">
+            <div class="flex justify-between items-center">
+                <h2 class="text-base font-bold text-emerald-400 flex items-center gap-2">
+                    <i class="fa-solid fa-key"></i> Free Keys စီမံရန်
+                </h2>
+                <button onclick="addFreeKeyRow()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs px-3.5 py-2 rounded-xl font-bold transition">
+                    + Key အသစ်ထည့်ရန်
+                </button>
+            </div>
+            <div id="freeKeysList" class="space-y-3"></div>
+        </section>
+
+        <div class="text-right">
+            <button onclick="saveAllSettings()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-8 py-3 rounded-2xl text-xs font-bold transition shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid fa-floppy-disk mr-1.5"></i> သိမ်းဆည်းမည် (Save Changes)
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const AUTH_EMAIL = "hcmtech.mm@gmail.com";
+        const AUTH_PASS = "Hcmadminpanel@312021";
+
+        const defaultServers = [
+            { id: "us", name: "US Server", url: "", subpath: "", username: "", password: "" },
+            { id: "sg", name: "SG Server", url: "", subpath: "", username: "", password: "" },
+            { id: "free", name: "Free Server", url: "", subpath: "", username: "", password: "" }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (sessionStorage.getItem("admin_logged_in") === "true") {
+                showAdminPanel();
+            }
+        });
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById("adminEmail").value.trim();
+            const pass = document.getElementById("adminPassword").value.trim();
+
+            if (email === AUTH_EMAIL && pass === AUTH_PASS) {
+                sessionStorage.setItem("admin_logged_in", "true");
+                showAdminPanel();
+            } else {
+                alert("Email သို့မဟုတ် Password မှားယွင်းနေပါသည်။");
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem("admin_logged_in");
+            location.reload();
+        }
+
+        function showAdminPanel() {
+            document.getElementById("loginBox").classList.add("hidden");
+            document.getElementById("adminContent").classList.remove("hidden");
+            document.body.className = "p-4 md:p-8 max-w-4xl mx-auto space-y-6";
+            loadAdminData();
+        }
+
+        function loadAdminData() {
+            const stored = localStorage.getItem("vpn_config");
+            const config = stored ? JSON.parse(stored) : { servers: defaultServers, freeKeys: [] };
+
+            renderServers(config.servers || defaultServers);
+            renderFreeKeys(config.freeKeys || [], config.servers || defaultServers);
+        }
+
+        function renderServers(servers) {
+            const container = document.getElementById("serversList");
+            container.innerHTML = "";
+
+            servers.forEach((s, idx) => {
+                container.innerHTML += `
+                    <div class="p-4 rounded-2xl border border-slate-800 bg-slate-900/60 space-y-3 text-xs">
+                        <h3 class="font-bold text-cyan-400 border-b border-slate-800 pb-2">${s.name}</h3>
+                        <div class="grid md:grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="text-[10px] text-slate-400">Server URL (Port ပါပါစေ)</label>
+                                <input type="text" id="srv_url_${idx}" value="${s.url}" placeholder="https://free.hcmapis.tech:17079" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">Web Subpath (ရှိလျှင်ထည့်ပါ)</label>
+                                <input type="text" id="srv_subpath_${idx}" value="${s.subpath || ''}" placeholder="/XF46qRQ10VYgsxSdP" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">3X-UI Panel Username</label>
+                                <input type="text" id="srv_user_${idx}" value="${s.username}" placeholder="HCM" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">3X-UI Panel Password</label>
+                                <input type="password" id="srv_pass_${idx}" value="${s.password}" placeholder="••••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFreeKeys(keys, servers) {
+            const container = document.getElementById("freeKeysList");
+            container.innerHTML = "";
+
+            if (keys.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-2">Free Key မရှိသေးပါ။ အပေါ်မှ ခလုတ်ကို နှိပ်၍ ထည့်ပါ။</p>`;
+                return;
+            }
+
+            keys.forEach((k, idx) => {
+                let options = servers.map(s => `<option value="${s.id}" ${s.id === k.serverId ? 'selected' : ''}>${s.name}</option>`).join('');
+                container.innerHTML += `
+                    <div class="flex flex-col md:flex-row gap-2 p-3 bg-slate-900/80 rounded-2xl border border-slate-800 items-center text-xs">
+                        <select id="key_srv_${idx}" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-slate-200 w-full md:w-auto">
+                            ${options}
+                        </select>
+                        <input type="text" id="key_label_${idx}" value="${k.label || ''}" placeholder="Title Label (ဥပမာ: Free Key 1)" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-slate-200 w-full md:w-auto">
+                        <input type="text" id="key_email_${idx}" value="${k.email}" placeholder="3X-UI ထဲမှ Key Email / Remark" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-slate-200 flex-1">
+                        <input type="text" id="key_vless_${idx}" value="${k.vlessConfig || ''}" placeholder="VLESS / Vmess Config String" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-slate-200 flex-1">
+                        <button onclick="removeFreeKeyRow(${idx})" class="text-red-400 hover:text-red-300 p-2"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function addFreeKeyRow() {
+            const stored = localStorage.getItem("vpn_config");
+            const config = stored ? JSON.parse(stored) : { servers: defaultServers, freeKeys: [] };
+            config.freeKeys.push({ serverId: "free", label: "Free Key New", email: "", vlessConfig: "" });
+            localStorage.setItem("vpn_config", JSON.stringify(config));
+            loadAdminData();
+        }
+
+        function removeFreeKeyRow(index) {
+            const stored = localStorage.getItem("vpn_config");
+            if (!stored) return;
+            const config = JSON.parse(stored);
+            config.freeKeys.splice(index, 1);
+            localStorage.setItem("vpn_config", JSON.stringify(config));
+            loadAdminData();
+        }
+
+        function saveAllSettings() {
+            const stored = localStorage.getItem("vpn_config");
+            const existing = stored ? JSON.parse(stored) : { servers: defaultServers, freeKeys: [] };
+
+            const updatedServers = defaultServers.map((s, idx) => ({
+                ...s,
+                url: document.getElementById(`srv_url_${idx}`).value.trim(),
+                subpath: document.getElementById(`srv_subpath_${idx}`).value.trim(),
+                username: document.getElementById(`srv_user_${idx}`).value.trim(),
+                password: document.getElementById(`srv_pass_${idx}`).value.trim()
+            }));
+
+            const updatedKeys = (existing.freeKeys || []).map((k, idx) => ({
+                serverId: document.getElementById(`key_srv_${idx}`).value,
+                label: document.getElementById(`key_label_${idx}`).value.trim(),
+                email: document.getElementById(`key_email_${idx}`).value.trim(),
+                vlessConfig: document.getElementById(`key_vless_${idx}`).value.trim()
+            }));
+
+            const newConfig = { servers: updatedServers, freeKeys: updatedKeys };
+            localStorage.setItem("vpn_config", JSON.stringify(newConfig));
+            alert("အချက်အလက်များကို အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ!");
+        }
+    </script>
+</body>
+</html>
